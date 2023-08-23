@@ -8,7 +8,7 @@
         <p class="text-2xl tracking-wide m-12 ">
           Are you ready to unlock the world of programming? Look no further! Algorythmics Universe is your one-stop destination for mastering the basics of programming and testing your skills through interactive quizzes. Whether you're a curious beginner or someone looking to solidify your programming foundation, we've got you covered.
         </p>
-        <a href="/signup" class="border-2 border-black border-opacity-50 rounded-full bg-purple-900 px-8 py-2 text-white text-xl hover:bg-purple-700 m-8 shadow-xl ">Get Started</a>
+        <a href="/register" class="border-2 border-black border-opacity-50 rounded-full bg-purple-900 px-8 py-2 text-white text-xl hover:bg-purple-700 m-8 shadow-xl ">Get Started</a>
 
       </div>
     </div>
@@ -25,13 +25,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .homepage {
   background-image: url('./images/bg.png');
   background-size: cover;
   width: 100%;
   height: 100vh;
 }
-
-
 </style>
