@@ -5,6 +5,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import Navbar from '@/Components/Navbar.vue'
 
 defineProps({
     status: String,
@@ -25,7 +26,7 @@ const submit = () => {
         <Navbar />
     <AuthenticationCard>
             <AuthenticationCardLogo />
-        <div class="bg-white h-[33rem] rounded-r-lg p-5 w-[20rem] shadow-2xl">
+        <div class="bg-white h-[33rem] rounded-r-lg p-5 w-80 shadow-2xl">
         <div class=" mt-32 mb-4 text-sm text-gray-600">
             Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
         </div>
@@ -59,15 +60,6 @@ const submit = () => {
     </AuthenticationCard>
     </div>
 </template>
-
-<script>
-import Navbar from '@/Components/Navbar.vue'
-export default {
-    components: {
-        Navbar,
-    }
-}
-</script>
 
 <style scoped>
 .forgot-pw-page, .forgot-pw-page::before {
