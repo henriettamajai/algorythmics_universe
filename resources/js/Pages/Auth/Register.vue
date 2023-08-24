@@ -28,7 +28,7 @@ const submit = () => {
     
     <AuthenticationCard>
         <div class="bg-white h-full rounded-r-lg p-5 w-[20rem] shadow-2xl">
-        <form @submit.prevent="submit" class="">
+        <form @submit.prevent="submit">
             <h1 class="text-center mb-6 md:font-bold text-xl font-semibold uppercase tracking-widest">Sign up</h1>
             <div>
                 <InputLabel for="name" value="Name" />
