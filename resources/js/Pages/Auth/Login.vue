@@ -6,6 +6,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import Navbar from '@/Components/Navbar.vue'
 
 defineProps({
     canResetPassword: Boolean,
@@ -34,7 +35,7 @@ const submit = () => {
     <Head title="Log in" />
 
     <AuthenticationCard>
-        <div class="bg-white h-[33rem] rounded-r-lg p-5 w-[20rem] shadow-2xl">
+        <div class="bg-white h-[33rem] rounded-r-lg p-5 w- shadow-2xl">
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
@@ -91,14 +92,6 @@ const submit = () => {
     </div>
 </template>
 
-<script>
-import Navbar from '@/Components/Navbar.vue'
-export default {
-    components: {
-        Navbar,
-    }
-}
-</script>
 
 <style scoped>
 .login-page, .login-page::before {
