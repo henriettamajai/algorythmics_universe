@@ -9,7 +9,6 @@
   </div>
 </template>
 
-
 <style scoped>
 .back {
   position: relative;
@@ -21,8 +20,5 @@
   background-size: cover;
   width: 100%;
   padding-bottom: 79%;
-
 }
-
-
 </style>

@@ -22,7 +22,7 @@ const submit = () => {
 </script>
 
 <template>
-<div class="registerpage w-screen h-screen">
+<div class="register-page w-screen h-screen">
     <Navbar/>
     <Head title="Register"/>
     
@@ -115,24 +115,24 @@ export default {
 </script>
 
 <style scoped>
-.registerpage {
-  background-image: url(./images/bg.png);
-  background-size: cover;
-  background: rgba(0, 0, 0, 0.5);
-  width: 100%;
-  height: 100vh;
+.register-page, .register-page::before {
+    background-image: url(./images/bg.png);
+    background-size: cover;
+    width: 100%;
 }
-.registerpage::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url(./images/bg.png);
-  background-size: cover;
-  opacity: 60%;
-  z-index: -1;
-  
+
+.register-page {
+    background: rgba(0, 0, 0, 0.5);
+    height: 100vh;
+}
+
+.register-page::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    opacity: 60%;
+    z-index: -1;
 }
 </style>
