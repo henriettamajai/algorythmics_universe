@@ -1,12 +1,12 @@
 <template>
     <nav class="navbar">
         <div>
-            <a href="/"><img src="/images/logo.png" alt="Logo" class="w-100"></a>
+            <a href="/"><img src="/images/logo.png" alt="Logo" width="350" height="auto"></a>
         </div>
         <div class="navbar-links flex items-center gap-6">
-            <a href="/about" class="rounded-full px-4 py-2 text-white text-xl hover:bg-purple-800">About Us</a>
-            <a href="/login" class="rounded-full px-4 py-2 text-white text-xl hover:bg-purple-800" >Login</a>
-            <a href="/register" class="border-2 border-black border-opacity-50 rounded-full bg-purple-900 px-4 py-2 text-white text-xl hover:bg-purple-800 ">Sign Up</a>
+            <a href="/about" class="rounded-full px-4 py-2 font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-800">About Us</a>
+            <a href="/login" class="rounded-full px-4 py-2 font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-800" >Login</a>
+            <a href="/register" class="inline-flex items-center px-4 py-2 bg-purple-800 border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 focus:bg-purple-700 active:bg-purple-700  focus:ring-offset-2 transition ease-in-out duration-150">Sign Up</a>
         </div>
     </nav>
 </template>

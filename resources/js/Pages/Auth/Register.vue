@@ -1,8 +1,6 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -24,14 +22,14 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Register" />
-
+<div class="register-page w-screen h-screen">
+    <Navbar/>
+    <Head title="Register"/>
+    
     <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
-
+        <div class="bg-white h-full rounded-r-lg p-5 w-[20rem] shadow-2xl">
         <form @submit.prevent="submit">
+            <h1 class="text-center mb-6 md:font-bold text-xl font-semibold uppercase tracking-widest">Sign up</h1>
             <div>
                 <InputLabel for="name" value="Name" />
                 <TextInput
@@ -85,21 +83,15 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
-            <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
-                <InputLabel for="terms">
-                    <div class="flex items-center">
-                        <Checkbox id="terms" v-model:checked="form.terms" name="terms" required />
-
-                        <div class="ml-2">
-                            I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Privacy Policy</a>
-                        </div>
-                    </div>
-                    <InputError class="mt-2" :message="form.errors.terms" />
-                </InputLabel>
-            </div>
-
+            <div class="mt-4">
+                <InputLabel for="role" value ="Role" />
+            <select class="block w-full border-purple-600 focus:border-purple-600 focus:ring-pruple-600 rounded-md shadow-sm">
+                    <option>Student</option>
+                    <option>Teacher</option>
+            </select>
+            </div> 
             <div class="flex items-center justify-end mt-4">
-                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-">
                     Already registered?
                 </Link>
 
@@ -108,5 +100,39 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
+        </div>
     </AuthenticationCard>
+    </div>
 </template>
+
+<script>
+import Navbar from '@/Components/Navbar.vue'
+export default {
+    components: {
+        Navbar,
+    }
+}
+</script>
+
+<style scoped>
+.register-page, .register-page::before {
+    background-image: url(./images/bg.png);
+    background-size: cover;
+    width: 100%;
+}
+
+.register-page {
+    background: rgba(0, 0, 0, 0.5);
+    height: 100vh;
+}
+
+.register-page::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    opacity: 60%;
+    z-index: -1;
+}
+</style>
