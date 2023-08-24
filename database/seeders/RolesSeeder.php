@@ -20,6 +20,6 @@ class RolesSeeder extends Seeder
         $role_student = Role::create(['name' => 'student']);
 
         $user = User::find(1);
-        $user->assignRole('admin');
+        $user->assignRole('student'); //default role
     }
 }
