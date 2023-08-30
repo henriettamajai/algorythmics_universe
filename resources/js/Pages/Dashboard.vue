@@ -37,31 +37,34 @@ import { ref } from 'vue'
 import Navigation from '@/Components/Navigation.vue'
 import Sidebar from '@/Components/Sidebar.vue'
 
-const showInprogress = ref(false);
-const showCompleted = ref(false);
-const showUpcoming = ref(false);
+const isInProgressShown = ref(false);
+const isCompletedShown = ref(false);
+const isUpcomingShown = ref(false);
+
+const categoryNames = {
+  inProgress: 'In Progress',
+  completed: 'Completed',
+  upcoming: 'Upcoming'
+};
 
 const courses = [
-  { id: 1, name: 'Course 1', status: 'In Progress' },
-  { id: 2, name: 'Course 2', status: 'Completed' },
-  { id: 3, name: 'Course 3', status: 'Upcoming' },
-  { id: 4, name: 'Course 4', status: 'Upcoming'},
-  { id: 5, name: 'Course 5', status: 'Upcoming' },
-  { id: 6, name: 'Course 6', status: 'Completed'}
-  
+  { id: 1, name: 'Course 1', status: categoryNames.inProgress },
+  { id: 2, name: 'Course 2', status: categoryNames.completed },
+  { id: 3, name: 'Course 3', status: categoryNames.upcoming },
+  { id: 4, name: 'Course 4', status: categoryNames.upcoming },
+  { id: 5, name: 'Course 5', status: categoryNames.upcoming },
+  { id: 6, name: 'Course 6', status: categoryNames.completed }
 ];
 
 const filteredCourses = ref([]);
 
-const showCategory = (category) => {
-  showInprogress.value = category === 'In Progress';
-  showCompleted.value = category === 'Completed';
-  showUpcoming.value = category === 'Upcoming';
-  filteredCourses.value = category === 'All' ? courses : courses.filter(course => course.status === category);
+function showCategory(category) {
+  isInProgressShown.value = category === categoryNames.inProgress;
+  isCompletedShown.value = category === categoryNames.completed;
+  isUpcomingShown.value = category === categoryNames.upcoming;
+  filteredCourses.value = courses.filter(course => course.status === category);
   filteredCourses.value = filteredCourses.value.slice(0, 3);
-};
-
-showCategory('All');
+}
 </script>
 
 <style>
