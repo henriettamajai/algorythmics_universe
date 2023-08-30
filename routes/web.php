@@ -25,7 +25,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::middleware([
     'auth:sanctum',
@@ -35,4 +34,5 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });

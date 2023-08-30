@@ -14,7 +14,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $courses = Course::all();
+        $user = auth()->user();
+        $courses = $user->courses;
 
         return Inertia::render('Dashboard', [
             'courses' => $courses,
