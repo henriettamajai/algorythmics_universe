@@ -35,7 +35,7 @@ const submit = () => {
     <Head title="Log in" />
 
     <AuthenticationCard>
-        <div class="bg-white h-[33rem] rounded-r-lg p-5 w- shadow-2xl">
+        <div class="bg-white h-[33rem] rounded-r-lg p-5 w-80 shadow-2xl">
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
@@ -91,7 +91,6 @@ const submit = () => {
     </AuthenticationCard>
     </div>
 </template>
-
 
 <style scoped>
 .login-page, .login-page::before {
