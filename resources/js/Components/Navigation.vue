@@ -18,7 +18,6 @@ import Searchbar from '@/Components/Searchbar.vue'
 import Notification from '@/Components/Notification.vue'
 
 function getClassForRoute(route) {
-  const currentPath = window.location.pathname;
-  return currentPath === route ? 'text-xl text-purple-600 rounded-full font-bold' : 'text-white';
+  return window.location.pathname === route ? 'text-xl text-purple-600 rounded-full font-bold' : 'text-white';
 };
 </script>

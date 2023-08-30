@@ -18,13 +18,13 @@
 import { ref } from 'vue';
 import { BellIcon } from '@heroicons/vue/24/outline';
 
+const components = {
+  BellIcon
+};
+
 const showDropdown = ref(false);
 
 function toggleDropdown() {
   showDropdown.value = !showDropdown.value;
 }
-
-const components = {
-  BellIcon
-};
 </script>
