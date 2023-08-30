@@ -14,26 +14,17 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import { BellIcon } from '@heroicons/vue/24/outline';
 
-export default {
-  name: 'Notification',
-  components: {
-    BellIcon
-  },
-  data() {
-    return {
-      showDropdown: false
-    };
-  },
-  methods: {
-    toggleDropdown() {
-      this.showDropdown = !this.showDropdown;
-    }
-  }
-}
-</script>
+const showDropdown = ref(false);
 
-<style>
-</style>
+function toggleDropdown() {
+  showDropdown.value = !showDropdown.value;
+}
+
+const components = {
+  BellIcon
+};
+</script>

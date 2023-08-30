@@ -12,25 +12,13 @@
   </nav>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import Searchbar from '@/Components/Searchbar.vue'
 import Notification from '@/Components/Notification.vue'
 
-export default {
-  name: 'Navigation',
-  components: {
-    Searchbar,
-    Notification,
-  },
-  methods: {
-    getClassForRoute(route) {
-      const currentPath = window.location.pathname;
-      return currentPath === route ? 'text-xl text-purple-600 rounded-full font-bold' : 'text-white' ;
-    },
-  },
+function getClassForRoute(route) {
+  const currentPath = window.location.pathname;
+  return currentPath === route ? 'text-xl text-purple-600 rounded-full font-bold' : 'text-white';
 };
 </script>
-
-<style scoped>
-/* Your existing styles can remain here */
-</style>
