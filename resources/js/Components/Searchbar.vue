@@ -18,11 +18,11 @@
 import { ref } from 'vue';
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
 
-const searchInput = ref('');
-
 const components = {
   MagnifyingGlassIcon,
 };
+
+const searchInput = ref('');
 </script>
 
 <style>
