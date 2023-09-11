@@ -18,6 +18,7 @@
 </template>
 
 <script setup>
+import '../../css/style.css'
 import Navigation from '@/Components/Navigation.vue'
 import Sidebar from '@/Components/Sidebar.vue'
 
@@ -48,17 +49,3 @@ const courses = [
   },
 ];
 </script>
-
-<style>
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: linear-gradient(to bottom, rgba(208,141,236,1), rgba(164,43,164,1),rgba(100,27,121,1), rgba(56,18,87,1), rgba(5,4,5,1));
-  background-size: cover;
-  background-attachment: fixed;
-}
-</style>
