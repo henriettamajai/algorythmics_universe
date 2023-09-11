@@ -15,11 +15,21 @@
       <div class="border border-white/50 rounded-xl ml-24 mr-24 shadow-lg">
       <h2 class="text-white uppercase tracking-widest text-2xl mt-6 mb-6">{{ currentChapter.title }}</h2>
       <p class="mb-6 text-white/90 text-xl text-left p-12">{{ currentChapter.content }}</p>
-      </div>
-      <!-- Buttons -->
-      <button class="m-6 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 uppercase tracking-widest" @click="prevChapter" v-if="currentChapterIndex > 0">Previous</button>
-      <button class="m-6 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 uppercase tracking-widest" @click="nextChapter" v-if="!isLastChapter">Next</button>
-      <button class="m-6 bg-purple-800 text-white px-4 py-2 rounded-lg hover:bg-purple-600 uppercase tracking-widest" @click="completeCourse" v-if="isLastChapter">Complete Course</button>
+    </div>
+     <GeneralButton
+        buttonText="Previous"
+        :isVisible="currentChapterIndex > 0"
+        @click="prevChapter"/>
+
+      <GeneralButton
+        buttonText="Next"
+        :isVisible="!isLastChapter"
+        @click="nextChapter"/>
+  
+      <GeneralButton
+        buttonText="Complete Course"
+        :isVisible="isLastChapter"
+        @click="completeCourse"/>
     </div>
   </div>
 </template>
@@ -28,23 +38,17 @@
 import { ref, computed } from 'vue'
 import '../../css/style.css'
 import Navigation from '@/Components/Navigation.vue'
-import Sidebar from '@/Components/Sidebar.vue'
+import GeneralButton from '@/Components/GeneralButton.vue'
 
 const { course } = defineProps(['course'])
 
 const currentChapterIndex = ref(0)
 
-const currentChapter = computed(() => {
-  return course.chapters[currentChapterIndex.value]
-})
+const currentChapter = computed(() => course.chapters[currentChapterIndex.value])
 
-const progressPercentage = computed(() => {
-  return ((currentChapterIndex.value + 1) / course.chapters.length) * 100
-})
+const progressPercentage = computed(() => ((currentChapterIndex.value + 1) / course.chapters.length) * 100)
 
-const isLastChapter = computed(() => {
-  return currentChapterIndex.value === course.chapters.length - 1
-})
+const isLastChapter = computed(() => currentChapterIndex.value === course.chapters.length - 1)
 
 function nextChapter() {
   if (!isLastChapter.value) {
