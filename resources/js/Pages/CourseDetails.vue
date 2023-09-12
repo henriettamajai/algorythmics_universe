@@ -17,19 +17,22 @@
       <p class="mb-6 text-white/90 text-xl text-left p-12">{{ currentChapter.content }}</p>
     </div>
      <GeneralButton
-        buttonText="Previous"
-        :isVisible="currentChapterIndex > 0"
-        @click="prevChapter"/>
+        v-if="currentChapterIndex > 0"
+        @click="prevChapter">
+        Previous
+     </GeneralButton>
 
       <GeneralButton
-        buttonText="Next"
-        :isVisible="!isLastChapter"
-        @click="nextChapter"/>
+        v-if="!isLastChapter"
+        @click="nextChapter">
+        Next
+      </GeneralButton>
   
       <GeneralButton
-        buttonText="Complete Course"
-        :isVisible="isLastChapter"
-        @click="completeCourse"/>
+        v-if="isLastChapter"
+        @click="completeCourse">
+        Complete Course
+      </GeneralButton>
     </div>
   </div>
 </template>
