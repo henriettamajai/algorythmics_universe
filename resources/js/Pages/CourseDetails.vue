@@ -39,6 +39,7 @@ import { ref, computed } from 'vue'
 import '../../css/style.css'
 import Navigation from '@/Components/Navigation.vue'
 import GeneralButton from '@/Components/GeneralButton.vue'
+import { Inertia } from '@inertiajs/inertia';
 
 const { course } = defineProps(['course'])
 
@@ -64,7 +65,7 @@ function prevChapter() {
 
 function completeCourse() {
   if (isLastChapter.value) {
-    window.location.href = '/courses';
+    Inertia.visit('/courses');
     course.status = 'completed';
   }
 }

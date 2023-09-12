@@ -1,7 +1,6 @@
 <template>
   <button
     class="m-6 text-white uppercase tracking-widest bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-lg"
-    :class="buttonClass"
     @click="handleClick"
     v-if="isVisible"
   >
@@ -10,18 +9,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 
-const props = defineProps({
-  buttonText: String,
-  buttonClass: String,
-  isVisible: Boolean,
-  onClick: Function,
-});
+const { buttonText, isVisible, onClick } = defineProps(['buttonText', 'isVisible', 'onClick']);
 
 const handleClick = () => {
-  if (props.onClick) {
-    props.onClick();
+  if (onClick) {
+    onClick();
   }
 };
 </script>
