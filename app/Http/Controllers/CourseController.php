@@ -19,15 +19,6 @@ class CourseController extends Controller
         ]);
     }
 
-    public function section()
-    {
-        $course = courses();
-        $sections = $course->sections;
-        return Inertia::render('Section', [
-            'sections' => $sections->simplePaginate(1),
-        ]);
-    }
-
     /**
      * Show the form for creating a new resource.
      */
