@@ -38,3 +38,4 @@ Route::middleware([
     Route::resource('sections', SectionController::class);
     Route::get('/courses/{id}', [CourseController::class, 'show'])->name('course.show');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+}); 

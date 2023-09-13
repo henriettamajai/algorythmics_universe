@@ -35,7 +35,6 @@ import {
   ArrowLeftOnRectangleIcon,
 } from '@heroicons/vue/24/outline';
 import { Inertia } from '@inertiajs/inertia';
-import axios from 'axios';
 
 const navigation = ref([
   { name: 'My Courses', href: '/mycourses', icon: AcademicCapIcon, current: false },
@@ -45,8 +44,7 @@ const navigation = ref([
 
 const handleLogout = async () => {
   try {
-    await axios.post(route('logout'));
-    Inertia.visit('/login');
+    Inertia.post(route('logout'));
   } catch (error) {
     console.error('Logout error:', error);
   }
