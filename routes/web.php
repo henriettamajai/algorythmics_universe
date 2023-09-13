@@ -4,6 +4,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\LogoutController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,7 +29,6 @@ Route::get('/', function () {
     ]);
 });
 
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -41,4 +41,6 @@ Route::middleware([
     Route::get('/teacherdashboard', [TeacherController::class, 'index'])->middleware('teacher')->name('teacherdashboard');
     Route::resource('courses', CourseController::class);
     Route::resource('sections', SectionController::class);
-});
+    Route::get('/courses/{id}', [CourseController::class, 'show'])->name('course.show');
+    Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+}); 

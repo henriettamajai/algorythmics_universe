@@ -19,7 +19,8 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
-        "@inertiajs/inertia-vue3": "^0.6.0",
-        "vue-router": "^4.2.4"
+    "@inertiajs/inertia-vue3": "^0.6.0",
+    "@inertiajs/inertia": "^0.11.1",
+    "vue-router": "^4.2.4"
     }
 }
