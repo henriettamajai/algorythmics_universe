@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SectionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -37,5 +38,5 @@ Route::middleware([
     })->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('courses', CourseController::class);
-    Route::get('/courses/{id}', [CourseController::class, 'show'])->name('course.show');
+    Route::resource('sections', SectionController::class);
 });
