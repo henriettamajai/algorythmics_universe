@@ -7,7 +7,7 @@
         <h1 class="text-xl text-white bg-transparent px-3 py-2 m-6 font-medium">
             Personal Quiz Library
         </h1>
-        <div v-if="quizzes.length === 0">No quizzes found.</div>
+        <div v-if="!quizzes.length">No quizzes found.</div>
           <div v-else class="ml-8 flex flex-wrap mt-8 gap-8">
             <div v-for="quiz in quizzes" :key="quiz.id"
                 class="border-2 border-purple-500 w-80 h-40 bg-white/10 shadow-lg rounded-lg overflow-hidden m-4">
