@@ -2,7 +2,29 @@
 import AuthenticationCard from '@/components/AuthenticationCard.vue';
 import InputLabel from '@/components/InputLabel.vue';
 import PrimaryButton from '@/components/PrimaryButton.vue';
-import TextInput from '@/components/TextInput.vue';
+
+import axios from 'axios';
+import { ref } from 'vue';
+
+
+const formData = ref({
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: '',
+});
+
+const registerUser = async () => {
+  try {
+      console.log(formData.value)
+      
+        const response = await axios.post('http://127.0.0.1:3000/api/register', formData.value);
+        console.log('User registered successfully', response.data);
+  } catch (error) {
+    console.error('Error registering user', error);
+  }
+};
+
 
 </script>
 
@@ -11,11 +33,12 @@ import TextInput from '@/components/TextInput.vue';
     <Navbar/>
     <AuthenticationCard>
         <div class="bg-white h-full rounded-r-lg p-5 w-[20rem] shadow-2xl">
-        <form>
+        <form @submit.prevent="registerUser">
             <h1 class="text-center mb-6 md:font-bold text-xl font-semibold uppercase tracking-widest">Sign up</h1>
             <div>
-                <InputLabel for="name" value="Name" />
-                <TextInput
+                <InputLabel for="name" value="UserName" />
+                <input
+                    v-model="formData.name"
                     id="name"
                     type="text"
                     class="mt-1 block w-full"
@@ -28,7 +51,8 @@ import TextInput from '@/components/TextInput.vue';
 
             <div class="mt-4">
                 <InputLabel for="email" value="Email" />
-                <TextInput
+                <input
+                v-model="formData.email"
                     id="email"
                     type="email"
                     class="mt-1 block w-full"
@@ -40,7 +64,8 @@ import TextInput from '@/components/TextInput.vue';
 
             <div class="mt-4">
                 <InputLabel for="password" value="Password" />
-                <TextInput
+                <input
+                v-model="formData.password"
                     id="password"
                     type="password"
                     class="mt-1 block w-full"
@@ -52,7 +77,8 @@ import TextInput from '@/components/TextInput.vue';
 
             <div class="mt-4">
                 <InputLabel for="password_confirmation" value="Confirm Password" />
-                <TextInput
+                <input
+                    v-model="formData.password_confirmation"
                     id="password_confirmation"
                     type="password"
                     class="mt-1 block w-full"
@@ -61,19 +87,11 @@ import TextInput from '@/components/TextInput.vue';
                 />
                 
             </div>
-
-            <div class="mt-4">
-                <InputLabel for="role" value ="Role" />
-            <select class="block w-full border-purple-600 focus:border-purple-600 focus:ring-purple-600 rounded-md shadow-sm">
-                    <option>Student</option>
-                    <option>Teacher</option>
-            </select>
-            </div> 
             <div class="flex items-center justify-end mt-4">
                 <a href="/login" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md p-2">
                     Already registered?
                 </a>
-                <PrimaryButton>
+                <PrimaryButton type="submit">
                     Register
                 </PrimaryButton>
             </div>
