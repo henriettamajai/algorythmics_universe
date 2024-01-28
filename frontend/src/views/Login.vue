@@ -3,10 +3,11 @@ import AuthenticationCard from '@/components/AuthenticationCard.vue';
 import Checkbox from '@/components/Checkbox.vue';
 import InputLabel from '@/components/InputLabel.vue';
 import PrimaryButton from '@/components/PrimaryButton.vue';
-import TextInput from '@/components/TextInput.vue';
+
 import Navbar from '@/components/Navbar.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const form = ref({
   email: '',
@@ -15,23 +16,44 @@ const form = ref({
 
 const router = useRouter();
 
-const login = () => {
-  console.log('Simulating login...');
-  router.push('/');
+const loginUser = async () => {
+  try { 
+    console.log(form.value.email, form.value.password);
+    const response = await axios.post('http://127.0.0.1:3000/api/login', {
+      email: form.value.email,
+      password: form.value.password,
+     
+    });
+
+    if (response.data && response.data.token) {
+      localStorage.setItem('token', response.data.token);
+
+      
+      router.push({
+        name: 'dashboard',
+        params: { account: response.data.account } // Pass the account parameter
+      });
+    } else {
+      console.error('Login failed:', response.data.error);
+    }
+  } catch (error) {
+    console.error('Error logging in:', error.message);
+  }
 };
 </script>
+
 
 <template>
   <div class="login-page w-screen h-screen">
     <Navbar />
     <AuthenticationCard>
       <div class="bg-white h-[33rem] rounded-r-lg p-5 w-80 shadow-2xl">
-        <form @submit.prevent="login">
+        <form @submit.prevent="loginUser">
             <h1 class="text-center mb-6 md:font-bold text-xl font-semibold uppercase tracking-widest">Login</h1>
 
           <div>
             <InputLabel for="email" value="Email" />
-            <TextInput
+            <input
               id="email"
               v-model="form.email"
               type="email"
@@ -44,7 +66,7 @@ const login = () => {
 
           <div class="mt-4">
             <InputLabel for="password" value="Password" />
-            <TextInput
+            <input
               id="password"
               v-model="form.password"
               type="password"
