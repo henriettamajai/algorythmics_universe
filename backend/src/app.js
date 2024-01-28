@@ -31,28 +31,34 @@ app.post('api/login', async (req, res)=> {
 
 app.post('/api/register', async (req, res) => {
   try {
-    const formData = req.body
-    console.log(formData)
+    const formData = req.body;
+    console.log(formData);
+
     if (!req.body.name || !req.body.email || !req.body.password || !req.body.password_confirmation) {
       return res.status(400).json({ error: 'Incomplete data. Please provide all required fields.' });
     }
 
+    if (req.body.password.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters long.' });
+    }
 
+    if (req.body.password !== req.body.password_confirmation) {
+      return res.status(400).json({ error: 'Password and password confirmation do not match.' });
+    }
 
     const database = client.db("algouniverse");
     const collection = database.collection("UserCollection");
 
+    // Prepare user document
     const userDocument = {
-        username: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-    }
+      username: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+    };
+
+    // Insert user into the database
     const result = await collection.insertOne(userDocument);
-
     console.log(`A document was inserted with the _id: ${result.insertedId}`);
-
-
-
 
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
@@ -60,6 +66,7 @@ app.post('/api/register', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 const port = 3000;
 app.listen(port, () => {
