@@ -8,7 +8,7 @@
           <div class="flex justify-center">
           <img class="h-48 rounded-full w-auto flex mt-12" src="@/assets/avatar.jpg" alt="Avatar" />
         </div>
-        <h1 class="text-center text-white uppercase tracking-widest pt-4">Lorem ipsum</h1>
+        <h1 class="text-center text-white uppercase tracking-widest pt-4">{{ user.username }}</h1>
           <ul role="list" class="pt-16">
             <li>
               <ul role="list" class="-mx-2 space-y-1">
@@ -21,7 +21,7 @@
               </ul>
             </li>
           </ul>
-          <h1 class="mt-auto mb-12 text-white uppercase tracking-widest">Welcome, Lorem ipsum! </h1>
+          <h1 class="mt-auto mb-12 text-white uppercase tracking-widest">Welcome,{{ user.username }} ! </h1>
         </nav>
       </div>
     </div>
@@ -41,4 +41,10 @@ const navigation = ref([
   { name: 'Logout', href: '/logout', icon: ArrowLeftOnRectangleIcon, current: false },
 ]);
 
+const user = ref({ username: 'John Doe' });
+const handleLogout = () => {
+  console.log("Logout clicked");
+  localStorage.removeItem('user');
+  window.location.href = '/';
+};
 </script>

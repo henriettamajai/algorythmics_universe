@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Sidebar />
+    <Sidebar :user="user" />
     <main class="ml-72">
       <div class="px-2 py-1">
         <Navigation />
