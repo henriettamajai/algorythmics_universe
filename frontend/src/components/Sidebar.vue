@@ -44,7 +44,7 @@ const navigation = ref([
 const user = ref({ username: 'John Doe' });
 const handleLogout = () => {
   console.log("Logout clicked");
-  localStorage.removeItem('user');
+  localStorage.removeItem('token');
   window.location.href = '/';
 };
 </script>
