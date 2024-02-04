@@ -1,36 +1,51 @@
+import { Vector2 } from './src/Vector2';
 import { resources } from './src/resource';
+import { Sprite } from './src/Sprite';
 import './style.css'
+import { GameLoop } from './src/GameLoop';
 
 const canvas = document.querySelector("#game-canvas");
 const ctx = canvas.getContext("2d");
 
-const draw = () => {
-  const sky = resources.images.sky;
-  if (sky.isLoaded) {
-    ctx.drawImage(sky.image, 0, 0);
-  }
+ const skySprite = new Sprite({
+  resource: resources.images.sky,
+  frameSize: new Vector2(1280,720)
+ })
 
-  const ground = resources.images.ground;
-  if (ground.isLoaded) {
-     ctx.imageSmoothingEnabled = false;
-    const scaleX = canvas.width / ground.image.width;
-    const scaleY = canvas.height / ground.image.height;
-    
-    const scale = Math.min(scaleX, scaleY);
-    
-   
-    const scaledWidth = ground.image.width * scale;
-    const scaledHeight = ground.image.height * scale;
-    
-    const x = (canvas.width - scaledWidth) / 2;
-    const y = (canvas.height - scaledHeight) / 2;
-    
-    ctx.drawImage(ground.image, x, y, scaledWidth, scaledHeight);
-  }
+ const groundSprite = new Sprite({
+  resource: resources.images.ground,
+  frameSize: new Vector2(1280,720)
+ })
+
+
+
+  const character = new Sprite({
+    resource: resources.images.character,
+    frameSize: new Vector2(64,64),
+    hFrames: 4, 
+    vFrames: 4,
+    frame: 1
+  })
+
+
+const characterPos = new Vector2((canvas.width - 64)/2, (canvas.width - 64)/2);
+
+const update = () => {
+  character.frame += 1;
 }
+const draw = () => {
+  skySprite.drawImage(ctx, 0, 0);
 
+  const groundWidth = 720;
+  const groundHeight = 720;
 
-setInterval( ()  => {
+  const x = (canvas.width - groundWidth) / 2;
+  const y = (canvas.height - groundHeight) / 2;
+  
+  groundSprite.drawImage(ctx, x, y, groundWidth, groundHeight);
 
-  draw()
-}, 300)
+  character.drawImage(ctx, characterPos.x, characterPos.y);
+};
+
+const gameLoop = new GameLoop(update,draw);
+gameLoop.start();
