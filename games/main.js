@@ -3,6 +3,8 @@ import { resources } from './src/resource';
 import { Sprite } from './src/Sprite';
 import './style.css'
 import { GameLoop } from './src/GameLoop';
+import { Input, LEFT, RIGHT, UP, DOWN } from './src/Input.js';
+
 
 const canvas = document.querySelector("#game-canvas");
 const ctx = canvas.getContext("2d");
@@ -18,7 +20,6 @@ const ctx = canvas.getContext("2d");
  })
 
 
-
   const character = new Sprite({
     resource: resources.images.character,
     frameSize: new Vector2(64,64),
@@ -29,9 +30,24 @@ const ctx = canvas.getContext("2d");
 
 
 const characterPos = new Vector2((canvas.width - 64)/2, (canvas.width - 64)/2);
-
+const input = new Input();
 const update = () => {
-  character.frame += 1;
+  if(input.direction === DOWN){
+    characterPos.y += 1;
+    
+  }
+  if(input.direction === UP){
+    characterPos.y -= 1;
+  }
+  if(input.direction === LEFT){
+    characterPos.x -= 1;
+    character.frame = 14;
+  }
+  if(input.direction === RIGHT){
+    characterPos.x += 1;
+    character.frame = 8;
+  }
+  
 }
 const draw = () => {
   skySprite.drawImage(ctx, 0, 0);
