@@ -12,32 +12,34 @@ export class GameLoop {
       this.isRunning = false;
     }
   
-    mainLoop = (timestamp) => {
+    mainLoop(timestamp) {
       if (!this.isRunning) return;
-  
+    
       let deltaTime = timestamp - this.lastFrameTime;
       this.lastFrameTime = timestamp;
-  
+    
       this.accumulatedTime += deltaTime;
-  
+    
       while (this.accumulatedTime >= this.timeStep) {
         this.update(this.timeStep); 
         this.accumulatedTime -= this.timeStep;
       }
-  
+    
       // Render
       this.render();
-  
-      this.rafId = requestAnimationFrame(this.mainLoop);
+    
+      this.rafId = requestAnimationFrame((timestamp) => this.mainLoop(timestamp)); 
     }
-  
+    
     start() {
       if (!this.isRunning) {
         this.isRunning = true;
-        this.rafId = requestAnimationFrame(this.mainLoop);
+        this.rafId = requestAnimationFrame(this.mainLoop.bind(this));
+
       }
     }
-  
+    
+    
     stop() {
       if (this.rafId) {
         cancelAnimationFrame(this.rafId);
@@ -46,16 +48,4 @@ export class GameLoop {
     }
   
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   

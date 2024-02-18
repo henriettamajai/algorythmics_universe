@@ -11,9 +11,9 @@
         <div class="p-4">
           <h3 class="text-xl font-semibold text-white uppercase tracking-widest">{{ course.title }}</h3>
           <p class="text-white mt-2">{{ course.description }}</p>
-          <a :href="`/courses/${course.id}`">
+          <a :href="`/game${course.id}`">
             <button class="mt-4 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 uppercase tracking-widest">
-              Enroll Now
+              Start now
             </button>
           </a>
         </div>
@@ -26,31 +26,30 @@
 import '@/css/style.css'
 import Navigation from '@/components/Navigation.vue'
 import Sidebar from '@/components/Sidebar.vue'
-
 const courses = [
   {
     id: 1,
-    title: 'Course 1',
+    title: 'Game 1',
     description: 'Learn the basics of HTML, CSS, and JavaScript.',
-    image: '@/assets/default.png',
+    image: '/images/default.png',
   },
   {
     id: 2,
     title: 'Course 2',
     description: 'Learn the basics of HTML, CSS, and JavaScript.',
-    image: '@/assets/default.png',
+    image: '/images/default.png',
   },
   {
     id: 3,
     title: 'Course 3',
     description: 'Learn the basics of HTML, CSS, and JavaScript.',
-    image: '@/assets/default.png',
+    image: '/images/default.png',
   },
   {
     id: 4,
     title: 'Course 4',
     description: 'Learn the basics of HTML, CSS, and JavaScript.',
-    image: '@/assets/default.png',
+    image: '/images/default.png',
   },
 ];
 </script>

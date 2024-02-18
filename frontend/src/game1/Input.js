@@ -46,7 +46,6 @@ export class Input {
   }
 
   onArrowPressed(direction) {
-    // Add this arrow to the queue if it's new
     if (this.heldDirections.indexOf(direction) === -1) {
       this.heldDirections.unshift(direction);
     }
