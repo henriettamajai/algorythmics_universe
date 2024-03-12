@@ -19,9 +19,23 @@ const routes = [
     { path: '/game1', component: Game1}
   ];
 
+ 
+
 const router = createRouter({
     history: createWebHistory(),
     routes,
   });
+  router.beforeEach((to, from, next) => {
+    const publicPages = ['/login', '/register', '/', '/courses'];
+    const authRequired = !publicPages.includes(to.path);
+    
+    const token = localStorage.getItem('token');
+    
   
+    if (authRequired && !token) {
+      return next('/login');
+    }
+  
+    next();
+  });
 export default router;
