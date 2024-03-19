@@ -8,7 +8,7 @@
           <div class="flex justify-center">
           <img class="h-48 rounded-full w-auto flex mt-12" src="@/assets/avatar.jpg" alt="Avatar" />
         </div>
-        <h1 class="text-center text-white uppercase tracking-widest pt-4">{{ user.username }}</h1>
+        <h1 class="text-center text-white uppercase tracking-widest pt-4">{{ username }}</h1>
           <ul role="list" class="pt-16">
             <li>
               <ul role="list" class="-mx-2 space-y-1">
@@ -21,30 +21,39 @@
               </ul>
             </li>
           </ul>
-          <h1 class="mt-auto mb-12 text-white uppercase tracking-widest">Welcome,{{ user.username }} ! </h1>
+          <h1 class="mt-auto mb-12 text-white uppercase tracking-widest">Welcome,{{ username }} ! </h1>
         </nav>
       </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import Cookies from 'js-cookie';
+
+const username = ref('');
+onMounted(() => {
+  const storedUsername = Cookies.get('username');
+  if (storedUsername) {
+    username.value = storedUsername;
+  }
+});
+
 import {
   AcademicCapIcon,
   UsersIcon,
-  ArrowLeftOnRectangleIcon,
+  ArrowLeftIcon,
 } from '@heroicons/vue/outline';
 
 const navigation = ref([
   { name: 'My Courses', href: '/mycourses', icon: AcademicCapIcon, current: false },
   { name: 'Friends', href: '/friends', icon: UsersIcon, current: false },
-  { name: 'Logout', href: '/logout', icon: ArrowLeftOnRectangleIcon, current: false },
+  { name: 'Logout', href: '/logout', icon: ArrowLeftIcon, current: false },
 ]);
 
-const user = ref({ username: 'John Doe' });
 const handleLogout = () => {
-  console.log("Logout clicked");
   localStorage.removeItem('token');
   window.location.href = '/';
 };
 </script>
+

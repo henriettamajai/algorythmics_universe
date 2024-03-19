@@ -16,22 +16,41 @@ const form = ref({
 
 const router = useRouter();
 
+const username = ref(''); // Define a ref to store the username
+
 const loginUser = async () => {
-  try { 
+  try {
+    // Log the email and password being submitted
     console.log(form.value.email, form.value.password);
+
+    // Send login request to the server
     const response = await axios.post('http://127.0.0.1:3000/api/login', {
       email: form.value.email,
       password: form.value.password,
-     
+    }, {
+      responseType: 'json',
+      withCredentials: true // Include credentials (cookies) in the request
     });
 
+    // Check if the server responded with a token
     if (response.data && response.data.token) {
+      // Store the token in localStorage for future requests
       localStorage.setItem('token', response.data.token);
 
-      
+      // Retrieve and store the username from the response cookie
+      const cookiesHeader = response.headers['Set-Cookie'];
+      if (cookiesHeader) {
+        const cookies = cookiesHeader.map(cookie => cookie.split(';')[0]);
+        const usernameCookie = cookies.find(cookie => cookie.startsWith('username='));
+        if (usernameCookie) {
+          username.value = usernameCookie.split('=')[1];
+        }
+      }
+
+      // Redirect the user to the dashboard route
       router.push({
         name: 'dashboard',
-        params: { account: response.data.account } // Pass the account parameter
+        params: { account: response.data.account }
       });
     } else {
       console.error('Login failed:', response.data.error);
@@ -41,7 +60,6 @@ const loginUser = async () => {
   }
 };
 </script>
-
 
 <template>
   <div class="login-page w-screen h-screen">

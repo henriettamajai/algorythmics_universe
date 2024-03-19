@@ -6,7 +6,10 @@ const jwt = require('jsonwebtoken');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:8080',
+  credentials: true
+}));
 app.use(bodyParser.json());
 
 
@@ -34,6 +37,8 @@ app.post('/api/login', async (req, res) => {
 
    
     const user = await collection.findOne({ email: req.body.email });
+    console.log('user from db ', user);
+    console.log('user from db ', user.username);
 
     // If user not found, return 400 Bad Request
     if (!user) {
@@ -44,7 +49,7 @@ app.post('/api/login', async (req, res) => {
     }
 
     const token = jwt.sign({ email: user.email }, 'your_secret_key', { expiresIn: '1h' });
-
+    res.cookie('username', user.username, { httpOnly: true});
     res.status(200).json({ token, account: { username: user.username, email: user.email } });
   } catch (error) {
     console.error('Error logging in user', error);

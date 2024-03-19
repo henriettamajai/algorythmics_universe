@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Sidebar :user="user" />
+    <Sidebar :username="username" />
     <main class="ml-72">
       <div class="px-2 py-1">
         <Navigation />
@@ -35,6 +35,9 @@
 import { ref } from 'vue'
 import Navigation from '@/components/Navigation.vue'
 import Sidebar from '@/components/Sidebar.vue'
+import Cookies from 'js-cookie';
+
+const username = ref(Cookies.get('username') || '');
 
 const isInProgressShown = ref(false);
 const isCompletedShown = ref(false);

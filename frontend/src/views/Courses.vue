@@ -26,6 +26,7 @@
 import '@/css/style.css'
 import Navigation from '@/components/Navigation.vue'
 import Sidebar from '@/components/Sidebar.vue'
+import CourseCard from '@/components/CourseCard.vue'
 const courses = [
   {
     id: 1,
