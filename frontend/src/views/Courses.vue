@@ -32,25 +32,25 @@ const courses = [
     id: 1,
     title: 'Game 1',
     description: 'Learn the basics of HTML, CSS, and JavaScript.',
-    image: '/images/default.png',
+    image: '/assets/default.png',
   },
   {
     id: 2,
     title: 'Course 2',
     description: 'Learn the basics of HTML, CSS, and JavaScript.',
-    image: '/images/default.png',
+    image: '/assets/default.png',
   },
   {
     id: 3,
     title: 'Course 3',
     description: 'Learn the basics of HTML, CSS, and JavaScript.',
-    image: '/images/default.png',
+    image: '/assets/default.png',
   },
   {
     id: 4,
     title: 'Course 4',
     description: 'Learn the basics of HTML, CSS, and JavaScript.',
-    image: '/images/default.png',
+    image: '/assets/default.png',
   },
 ];
 </script>
