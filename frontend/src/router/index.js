@@ -6,7 +6,6 @@ import Courses from '@/views/Courses.vue'
 import Login from '@/views/Login.vue'
 import Game1 from '@/game1/Game1.vue'
 
-
 const routes = [
     { path: '/', component: Home },
     { path: '/register', component: Register},
@@ -16,8 +15,6 @@ const routes = [
     { path: '/dashboard/:account', name: 'dashboard', component: Dashboard },
     { path: '/game1', component: Game1}
   ];
-
- 
 
 const router = createRouter({
     history: createWebHistory(),
@@ -29,7 +26,6 @@ const router = createRouter({
     
     const token = localStorage.getItem('token');
     
-  
     if (authRequired && !token) {
       return next('/login');
     }

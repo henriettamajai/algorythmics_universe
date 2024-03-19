@@ -4,7 +4,6 @@
       <div class="ml-6 text-sm text-white uppercase tracking-widest">
         <a :class="getClassForRoute('/dashboard')" href="/dashboard">Dashboard</a>
         <a :class="getClassForRoute('/courses')" class="ml-8" href="/courses">Courses</a>
-        <a :class="getClassForRoute('/settings')" class="ml-8" href="/settings">Settings</a>
       </div>
       <Searchbar />
       <Notification />
