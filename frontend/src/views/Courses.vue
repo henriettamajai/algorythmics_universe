@@ -45,4 +45,5 @@ const courses = [
   badges: ['HTML', 'CSS', 'JavaScript'],
 },
 ];
+
 </script>

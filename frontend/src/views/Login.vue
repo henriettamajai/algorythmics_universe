@@ -36,16 +36,7 @@ const loginUser = async () => {
     if (response.data && response.data.token) {
       // Store the token in localStorage for future requests
       localStorage.setItem('token', response.data.token);
-
-      // Retrieve and store the username from the response cookie
-      const cookiesHeader = response.headers['Set-Cookie'];
-      if (cookiesHeader) {
-        const cookies = cookiesHeader.map(cookie => cookie.split(';')[0]);
-        const usernameCookie = cookies.find(cookie => cookie.startsWith('username='));
-        if (usernameCookie) {
-          username.value = usernameCookie.split('=')[1];
-        }
-      }
+      localStorage.setItem('username', response.data.account.username); // Store the username in localStorage
 
       // Redirect the user to the dashboard route
       router.push({

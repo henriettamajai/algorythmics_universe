@@ -29,11 +29,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import Cookies from 'js-cookie';
 
-const username = ref('');
+const username = ref(localStorage.getItem('username'));
 onMounted(() => {
-  const storedUsername = Cookies.get('username');
+  const storedUsername = sessionStorage.getItem('username');
   if (storedUsername) {
     username.value = storedUsername;
   }
@@ -53,6 +52,7 @@ const navigation = ref([
 
 const handleLogout = () => {
   localStorage.removeItem('token');
+  localStorage.removeItem('username');
   window.location.href = '/';
 };
 </script>

@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node src/app.js",
-    "test": "test"
+    "test": "test",
+    "dev": "nodemon src/app.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,5 +17,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.3.0",
     "mongoose": "^8.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.23.0"
   }
 }
