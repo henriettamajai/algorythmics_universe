@@ -6,6 +6,10 @@
         <canvas id="game-canvas" width="1280px" height="720"></canvas>
       </div>
     </div>
+    <IntroModal 
+      :visible="introVisible" 
+      @close="closeIntroModal" 
+    />
     <Modal 
       :question="currentQuestion" 
       :visible="modalVisible" 
@@ -23,11 +27,13 @@ import { GameLoop } from './GameLoop';
 import { Input, LEFT, RIGHT, UP, DOWN } from './Input.js';
 import Navigation from '@/components/Navigation.vue';
 import { Collectible } from './Collectible.js';
+import IntroModal from './IntroModal.vue';
 import Modal from './Modal.vue';
 
 export default {
-  components: { Navigation, Modal },
+  components: { Navigation, IntroModal, Modal },
   setup() {
+    const introVisible = ref(true);
     const modalVisible = ref(false);
     const currentQuestion = ref('');
     let currentCollectible = null;
@@ -60,10 +66,10 @@ export default {
 
       const collectibles = [
         new Collectible('number', 42, new Vector2(455, 140), 'sprites/circle.png'),
-        new Collectible('string', 'moon', new Vector2(855, 247), 'sprites/moon.png'),
+        new Collectible('string', 'moon', new Vector2(750, 247), 'sprites/moon.png'),
         new Collectible('boolean', true, new Vector2(700, 500), 'sprites/circle2.png'),
-        new Collectible('char', 'A', new Vector2(250, 200), 'sprites/circle3.png'),
-        new Collectible('float', 12.5, new Vector2(250, 250), 'sprites/rock.png')
+        new Collectible('char', 'A', new Vector2(850, 200), 'sprites/circle3.png'),
+        new Collectible('float', 12.5, new Vector2(750, 650), 'sprites/rock.png')
       ];
 
       const update = () => {
@@ -89,7 +95,7 @@ export default {
               characterPos.y < item.position.y + 32 &&
               characterPos.y + 64 > item.position.y) {
             item.collected = true;
-            gameLoop.stop(); // Stop the game loop when asking the question
+            gameLoop.stop();
             askQuestion(item);
           }
         });
@@ -110,7 +116,7 @@ export default {
         collectibles.forEach(item => item.draw(ctx));
       };
 
-      gameLoop = new GameLoop(update, draw); // Assign the game loop instance
+      gameLoop = new GameLoop(update, draw); 
       gameLoop.start();
     };
 
@@ -121,7 +127,7 @@ export default {
     };
 
     const handleAnswer = (answer) => {
-      if (answer !== null && ((currentCollectible.type === 'number' && answer.toLowerCase() === 'number') ||
+      if (answer !== null && ((currentCollectible.type === 'int' && answer.toLowerCase() === 'int') ||
           (currentCollectible.type === 'string' && answer.toLowerCase() === 'string') ||
           (currentCollectible.type === 'boolean' && answer.toLowerCase() === 'boolean') ||
           (currentCollectible.type === 'char' && answer.toLowerCase() === 'char') ||
@@ -132,7 +138,11 @@ export default {
         currentCollectible.collected = false;
       }
       modalVisible.value = false;
-      gameLoop.start(); // Restart the game loop after the question is answered
+      gameLoop.start();
+    };
+
+    const closeIntroModal = () => {
+      introVisible.value = false;
     };
 
     onMounted(() => {
@@ -140,9 +150,11 @@ export default {
     });
 
     return {
+      introVisible,
       modalVisible,
       currentQuestion,
       handleAnswer,
+      closeIntroModal,
       startGame
     };
   }
