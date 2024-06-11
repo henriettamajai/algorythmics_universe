@@ -6,24 +6,32 @@
         <canvas id="game-canvas" width="1280px" height="720"></canvas>
       </div>
     </div>
+    <Modal 
+      :question="currentQuestion" 
+      :visible="modalVisible" 
+      @submit="handleAnswer" 
+    />
   </div>
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Vector2 } from './Vector2';
 import { resources } from './Resource';
 import { Sprite } from './Sprite';
 import { GameLoop } from './GameLoop';
 import { Input, LEFT, RIGHT, UP, DOWN } from './Input.js';
 import Navigation from '@/components/Navigation.vue';
-import { Collectible } from './Collectible'; 
+import { Collectible } from './Collectible.js';
+import Modal from './Modal.vue';
 
 export default {
+  components: { Navigation, Modal },
   setup() {
-    onMounted(() => {
-      startGame(); 
-    });
+    const modalVisible = ref(false);
+    const currentQuestion = ref('');
+    let currentCollectible = null;
+    let gameLoop = null;
 
     const startGame = () => {
       const canvas = document.getElementById("game-canvas");
@@ -50,13 +58,12 @@ export default {
       const characterPos = new Vector2((canvas.width - 64) / 2, (canvas.width - 64) / 2);
       const input = new Input();
 
-     //initializing items
       const collectibles = [
-      new Collectible('int', 42, new Vector2(100, 100), 'sprites/circle.png'),
-      new Collectible('string', 'moon', new Vector2(200, 200),'sprites/moon.png'),
-      new Collectible('boolean', 'true', new Vector2(150, 100), 'sprites/circle2.png'),
-      new Collectible('char', 'A', new Vector2(250, 200),'sprites/circle3.png'),
-      new Collectible('float', 12.5, new Vector2(250, 250),'sprites/rock.png'),
+        new Collectible('number', 42, new Vector2(455, 140), 'sprites/circle.png'),
+        new Collectible('string', 'moon', new Vector2(855, 247), 'sprites/moon.png'),
+        new Collectible('boolean', true, new Vector2(700, 500), 'sprites/circle2.png'),
+        new Collectible('char', 'A', new Vector2(250, 200), 'sprites/circle3.png'),
+        new Collectible('float', 12.5, new Vector2(250, 250), 'sprites/rock.png')
       ];
 
       const update = () => {
@@ -76,14 +83,15 @@ export default {
         }
 
         collectibles.forEach(item => {
-    if (!item.collected &&
-        characterPos.x < item.position.x + 32 &&
-        characterPos.x + 64 > item.position.x &&
-        characterPos.y < item.position.y + 32 &&
-        characterPos.y + 64 > item.position.y) {
-      item.collected = true;
-      askQuestion(item);
-    }
+          if (!item.collected &&
+              characterPos.x < item.position.x + 32 &&
+              characterPos.x + 64 > item.position.x &&
+              characterPos.y < item.position.y + 32 &&
+              characterPos.y + 64 > item.position.y) {
+            item.collected = true;
+            gameLoop.stop(); // Stop the game loop when asking the question
+            askQuestion(item);
+          }
         });
       };
 
@@ -102,24 +110,41 @@ export default {
         collectibles.forEach(item => item.draw(ctx));
       };
 
-      const gameLoop = new GameLoop(update, draw);
+      gameLoop = new GameLoop(update, draw); // Assign the game loop instance
       gameLoop.start();
-
     };
+
+    const askQuestion = (item) => {
+      currentQuestion.value = `Mi a változó típusa ennek az értéknek: ${item.value}?`;
+      currentCollectible = item;
+      modalVisible.value = true;
+    };
+
+    const handleAnswer = (answer) => {
+      if (answer !== null && ((currentCollectible.type === 'number' && answer.toLowerCase() === 'number') ||
+          (currentCollectible.type === 'string' && answer.toLowerCase() === 'string') ||
+          (currentCollectible.type === 'boolean' && answer.toLowerCase() === 'boolean') ||
+          (currentCollectible.type === 'char' && answer.toLowerCase() === 'char') ||
+          (currentCollectible.type === 'float' && answer.toLowerCase() === 'float'))) {
+        alert('Correct answer! Item collected!');
+      } else {
+        alert('Incorrect answer! Try again.');
+        currentCollectible.collected = false;
+      }
+      modalVisible.value = false;
+      gameLoop.start(); // Restart the game loop after the question is answered
+    };
+
+    onMounted(() => {
+      startGame();
+    });
+
     return {
+      modalVisible,
+      currentQuestion,
+      handleAnswer,
       startGame
     };
-  }
-};
-
-const askQuestion = (item) => {
-  const answer = prompt(`Mi a változó típusa ennek az értéknek: ${item.value}?`);
-  if (answer !== null && ((item.type === 'number' && answer.toLowerCase() === 'number') ||
-      (item.type === 'string' && answer.toLowerCase() === 'string'))) {
-    alert('Correct answer! Item collected!');
-  } else {
-    alert('Incorrect answer! Try again.');
-    item.collected = false;
   }
 };
 </script>
