@@ -38,6 +38,7 @@ export default {
     const currentQuestion = ref('');
     let currentCollectible = null;
     let gameLoop = null;
+    const message = ref('');
 
     const startGame = () => {
       const canvas = document.getElementById("game-canvas");
@@ -132,14 +133,15 @@ export default {
           (currentCollectible.type === 'boolean' && answer.toLowerCase() === 'boolean') ||
           (currentCollectible.type === 'char' && answer.toLowerCase() === 'char') ||
           (currentCollectible.type === 'float' && answer.toLowerCase() === 'float'))) {
-        alert('Correct answer! Item collected!');
+        message.value = 'Correct answer! Item collected!';
       } else {
-        alert('Incorrect answer! Try again.');
+        message.value = 'Incorrect answer! Try again!';
         currentCollectible.collected = false;
       }
       modalVisible.value = false;
       gameLoop.start();
     };
+
 
     const closeIntroModal = () => {
       introVisible.value = false;
@@ -153,6 +155,7 @@ export default {
       introVisible,
       modalVisible,
       currentQuestion,
+      message,
       handleAnswer,
       closeIntroModal,
       startGame
