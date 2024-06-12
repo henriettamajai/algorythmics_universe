@@ -32,22 +32,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import Navigation from '@/components/Navigation.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import Cookies from 'js-cookie';
+import { searchQuery } from '@/store/searchState';
 
 const username = ref(Cookies.get('username') || '');
-
-const isInProgressShown = ref(false);
-const isCompletedShown = ref(false);
-const isUpcomingShown = ref(false);
 
 const categoryNames = {
   inProgress: 'In Progress',
   completed: 'Completed',
   upcoming: 'Upcoming'
 };
+
+const selectedCategory = ref(categoryNames.inProgress);
 
 const courses = [
   { id: 1, name: 'Course 1', status: categoryNames.inProgress },
@@ -58,15 +57,21 @@ const courses = [
   { id: 6, name: 'Course 6', status: categoryNames.completed }
 ];
 
-const filteredCourses = ref([]);
-
 function showCategory(category) {
-  isInProgressShown.value = category === categoryNames.inProgress;
-  isCompletedShown.value = category === categoryNames.completed;
-  isUpcomingShown.value = category === categoryNames.upcoming;
-  filteredCourses.value = courses.filter(course => course.status === category);
-  filteredCourses.value = filteredCourses.value.slice(0, 3);
+  selectedCategory.value = category;
 }
+
+const filteredCourses = computed(() => {
+  let filtered = courses.filter(course => course.status === selectedCategory.value);
+
+  if (searchQuery.value) {
+    filtered = filtered.filter(course => 
+      course.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+  }
+
+  return filtered.slice(0, 3);
+});
 </script>
 
 <style>
