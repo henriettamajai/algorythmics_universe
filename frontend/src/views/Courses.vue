@@ -5,7 +5,7 @@
       <Navigation />
     </div>
     <div class="ml-80 flex flex-wrap mt-8 gap-6">
-      <CourseCard v-for="course in courses" :key="course.id" :course="course" />
+      <CourseCard v-for="course in filteredCourses" :key="course.id" :course="course" />
     </div>
   </div>
 </template>
@@ -15,6 +15,9 @@ import '@/css/style.css'
 import Navigation from '@/components/Navigation.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import CourseCard from '@/components/CourseCard.vue'
+import { searchQuery } from '@/store/searchState'
+import { computed } from 'vue';
+
 const courses = [
   {
     id: 1,
@@ -45,5 +48,16 @@ const courses = [
   badges: ['HTML', 'CSS', 'JavaScript'],
 },
 ];
+
+const filteredCourses = computed(() => {
+  if (!searchQuery.value) {
+    return courses;
+  }
+  return courses.filter(course =>
+    course.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    course.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
 
 </script>

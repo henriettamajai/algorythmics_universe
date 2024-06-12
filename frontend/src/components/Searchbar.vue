@@ -2,7 +2,7 @@
    <div class="flex-grow items-center mt-2 basis-auto">
           <div class="ml-auto w-[300px] lg:pr-2">
             <div class="relative flex w-full flex-wrap items-stretch">
-            <input v-model="searchInput"
+            <input v-model="searchInput" @input="onSearch"
             type="search" 
             class="relative m-0 -mr-0.5 pl-8 block w-[1px] min-w-0 text-white border border-white focus:border-purple-900 shadow-m flex-auto rounded-full bg-transparent bg-clip-padding px-3 py-[0.25rem] transition duration-200 ease-in-out motion-reduce:transition-none" 
             placeholder="Search.."/>
@@ -17,8 +17,13 @@
 <script setup>
 import { ref } from 'vue';
 import { SearchIcon } from '@heroicons/vue/outline';
+import { searchQuery } from '@/store/searchState';
+
 
 const searchInput = ref('');
+const onSearch = () => {
+  searchQuery.value = searchInput.value;
+}
 </script>
 
 <style>
