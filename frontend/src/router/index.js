@@ -5,6 +5,7 @@ import Dashboard from '@/views/Dashboard.vue'
 import Courses from '@/views/Courses.vue'
 import Login from '@/views/Login.vue'
 import Game1 from '@/game1/Game1.vue'
+import Game2 from '@/game2/Game2.vue'
 
 const routes = [
     { path: '/', component: Home },
@@ -13,7 +14,8 @@ const routes = [
     { path: '/courses', component: Courses},
     { path: '/login', component: Login},
     { path: '/dashboard/:account', name: 'dashboard', component: Dashboard },
-    { path: '/game1', component: Game1}
+    { path: '/game1', component: Game1},
+    { path: '/game2', component: Game2}
   ];
 
 const router = createRouter({
