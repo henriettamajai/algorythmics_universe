@@ -1,16 +1,14 @@
 <template>
   <div>
     <Navigation />
-    <div class="centered-container">
-      <div class="game-container">
-        <div class="game-wrapper">
+    <div class="flex justify-center items-center pt-6">
+      <div class="relative">
+        <div class="game-relative">
           <canvas id="game-canvas" width="1280" height="720" class="rounded-lg"></canvas>
         </div>
-        <div class="collected-counter" style="position: absolute; bottom: 4px; left: 4px; background-color: rgba(0, 0, 0, 0.5); padding: 2px; border-radius: 4px; color: white; font-size: 18px;">
-  <p style="margin: 24px; padding: 0;">Collected items: {{ collectedCount }}</p>
-</div>
-
-
+        <div class="absolute bottom-4 left-4 bg-black bg-opacity-50 p-2 rounded text-white text-lg">
+          <p>Collected items: {{ collectedCount }}</p>
+        </div>
       </div>
     </div>
 
@@ -24,6 +22,10 @@
       :question="currentQuestion.question"
       :answers="currentQuestion.answers"
       @answer="handleAnswer"
+    />
+    <OutroModal 
+      :visible="congratulationsVisible" 
+      @close="closeCongratulationsModal" 
     />
   </div>
 </template>
@@ -39,12 +41,14 @@ import Navigation from '@/components/Navigation.vue';
 import { Collectible } from './Collectible.js';
 import IntroModal from './IntroModal.vue';
 import QuestionModal from './QuestionModal.vue';
+import OutroModal from './OutroModal.vue';
 
 export default {
-  components: { Navigation, IntroModal, QuestionModal },
+  components: { Navigation, IntroModal, QuestionModal, OutroModal },
   setup() {
     const introVisible = ref(true);
     const questionVisible = ref(false);
+    const congratulationsVisible = ref(false);
     const currentQuestion = ref(null);
     let gameLoop = null;
     
@@ -156,10 +160,18 @@ export default {
         if (collectible) {
           collectible.collected = true; 
           collectedCount.value++;
+          if (collectedCount.value === 5) {
+            congratulationsVisible.value = true;
+          } else {
+            gameLoop.start();
+          }
         }
         questionVisible.value = false;
-        gameLoop.start();
       }
+    };
+
+    const closeCongratulationsModal = () => {
+      congratulationsVisible.value = false;
     };
 
     onMounted(() => {
@@ -169,29 +181,14 @@ export default {
     return {
       introVisible,
       questionVisible,
+      congratulationsVisible,
       currentQuestion,
       closeIntroModal,
       showQuestionModal,
       handleAnswer,
+      closeCongratulationsModal,
       collectedCount
     };
   }
 };
 </script>
-
-<style scoped>
-.centered-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 24px;
-}
-
-.game-container {
-  position: relative;
-}
-
-.game-wrapper {
-  position: relative;
-}
-</style>
