@@ -2,11 +2,15 @@
   <div>
     <Navigation />
     <div class="centered-container">
-      <div ref="gameContainer" class="game-container">
-        <canvas id="game-canvas" width="1280px" height="720" class="rounded-lg"></canvas>
-        <div class="collected-counter">
-          <p>Collected: {{ collectedCount }}</p>
+      <div class="game-container">
+        <div class="game-wrapper">
+          <canvas id="game-canvas" width="1280" height="720" class="rounded-lg"></canvas>
         </div>
+        <div class="collected-counter" style="position: absolute; bottom: 4px; left: 4px; background-color: rgba(0, 0, 0, 0.5); padding: 2px; border-radius: 4px; color: white; font-size: 18px;">
+  <p style="margin: 24px; padding: 0;">Collected items: {{ collectedCount }}</p>
+</div>
+
+
       </div>
     </div>
 
@@ -121,12 +125,6 @@ export default {
 
         character.drawImage(ctx, characterPos.x, characterPos.y);
         collectibles.forEach(item => item.draw(ctx));
-
-      
-        ctx.fillStyle = 'white';
-        ctx.font = '20px Arial';
-        ctx.textAlign = 'left';
-        ctx.fillText(`Collected: ${collectedCount.value}`, 20, canvas.height - 20);
       };
 
       gameLoop = new GameLoop(update, draw);
@@ -190,6 +188,10 @@ export default {
 }
 
 .game-container {
+  position: relative;
+}
+
+.game-wrapper {
   position: relative;
 }
 </style>
