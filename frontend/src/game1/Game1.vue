@@ -3,7 +3,7 @@
     <Navigation />
     <div class="centered-container">
       <div ref="gameContainer" class="game-container">
-        <canvas id="game-canvas" width="1280px" height="720"></canvas>
+        <canvas id="game-canvas" width="1280px" height="720" class="rounded-lg"></canvas>
       </div>
     </div>
     <IntroModal 
@@ -75,17 +75,17 @@ export default {
 
       const update = () => {
         if (input.direction === DOWN) {
-          characterPos.y += 1;
+          characterPos.y += 3;
         }
         if (input.direction === UP) {
-          characterPos.y -= 1;
+          characterPos.y -= 3;
         }
         if (input.direction === LEFT) {
-          characterPos.x -= 1;
+          characterPos.x -= 3;
           character.frame = 14;
         }
         if (input.direction === RIGHT) {
-          characterPos.x += 1;
+          characterPos.x += 3;
           character.frame = 8;
         }
 
