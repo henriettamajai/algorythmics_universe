@@ -6,14 +6,20 @@
         <canvas id="game-canvas" width="1280px" height="720" class="rounded-lg"></canvas>
       </div>
     </div>
+
+    <!-- IntroModal komponens -->
     <IntroModal 
       :visible="introVisible" 
       @close="closeIntroModal" 
     />
-    <Modal 
-      :question="currentQuestion" 
-      :visible="modalVisible" 
-      @submit="handleAnswer" 
+
+    <!-- QuestionModal komponens -->
+    <QuestionModal 
+      v-if="questionVisible"
+      :visible="questionVisible"
+      :question="currentQuestion.question"
+      :answers="currentQuestion.answers"
+      @answer="handleAnswer"
     />
   </div>
 </template>
@@ -28,17 +34,23 @@ import { Input, LEFT, RIGHT, UP, DOWN } from './Input.js';
 import Navigation from '@/components/Navigation.vue';
 import { Collectible } from './Collectible.js';
 import IntroModal from './IntroModal.vue';
-import Modal from './Modal.vue';
+import QuestionModal from './QuestionModal.vue';
 
 export default {
-  components: { Navigation, IntroModal, Modal },
+  components: { Navigation, IntroModal, QuestionModal },
   setup() {
     const introVisible = ref(true);
-    const modalVisible = ref(false);
-    const currentQuestion = ref('');
-    let currentCollectible = null;
+    const questionVisible = ref(false);
+    const currentQuestion = ref(null);
     let gameLoop = null;
-    const message = ref('');
+    
+    const collectibles = [
+      new Collectible('int', 42, new Vector2(455, 140), 'sprites/circle.png'),
+      new Collectible('string', 'moon', new Vector2(750, 247), 'sprites/moon.png'),
+      new Collectible('boolean', true, new Vector2(700, 500), 'sprites/circle2.png'),
+      new Collectible('char', 'A', new Vector2(850, 200), 'sprites/circle3.png'),
+      new Collectible('float', 12.5, new Vector2(750, 650), 'sprites/rock.png')
+    ];
 
     const startGame = () => {
       const canvas = document.getElementById("game-canvas");
@@ -65,14 +77,6 @@ export default {
       const characterPos = new Vector2((canvas.width - 64) / 2, (canvas.width - 64) / 2);
       const input = new Input();
 
-      const collectibles = [
-        new Collectible('number', 42, new Vector2(455, 140), 'sprites/circle.png'),
-        new Collectible('string', 'moon', new Vector2(750, 247), 'sprites/moon.png'),
-        new Collectible('boolean', true, new Vector2(700, 500), 'sprites/circle2.png'),
-        new Collectible('char', 'A', new Vector2(850, 200), 'sprites/circle3.png'),
-        new Collectible('float', 12.5, new Vector2(750, 650), 'sprites/rock.png')
-      ];
-
       const update = () => {
         if (input.direction === DOWN) {
           characterPos.y += 3;
@@ -91,13 +95,13 @@ export default {
 
         collectibles.forEach(item => {
           if (!item.collected &&
-              characterPos.x < item.position.x + 32 &&
-              characterPos.x + 64 > item.position.x &&
-              characterPos.y < item.position.y + 32 &&
-              characterPos.y + 64 > item.position.y) {
+              characterPos.x < item.position.x + 16 &&
+              characterPos.x + 56 > item.position.x &&
+              characterPos.y < item.position.y + 16 &&
+              characterPos.y + 56 > item.position.y) {
             item.collected = true;
+            showQuestionModal(item);
             gameLoop.stop();
-            askQuestion(item);
           }
         });
       };
@@ -117,34 +121,38 @@ export default {
         collectibles.forEach(item => item.draw(ctx));
       };
 
-      gameLoop = new GameLoop(update, draw); 
+      gameLoop = new GameLoop(update, draw);
       gameLoop.start();
     };
-
-    const askQuestion = (item) => {
-      currentQuestion.value = `Mi a változó típusa ennek az értéknek: ${item.value}?`;
-      currentCollectible = item;
-      modalVisible.value = true;
-    };
-
-    const handleAnswer = (answer) => {
-      if (answer !== null && ((currentCollectible.type === 'int' && answer.toLowerCase() === 'int') ||
-          (currentCollectible.type === 'string' && answer.toLowerCase() === 'string') ||
-          (currentCollectible.type === 'boolean' && answer.toLowerCase() === 'boolean') ||
-          (currentCollectible.type === 'char' && answer.toLowerCase() === 'char') ||
-          (currentCollectible.type === 'float' && answer.toLowerCase() === 'float'))) {
-        message.value = 'Correct answer! Item collected!';
-      } else {
-        message.value = 'Incorrect answer! Try again!';
-        currentCollectible.collected = false;
-      }
-      modalVisible.value = false;
-      gameLoop.start();
-    };
-
 
     const closeIntroModal = () => {
       introVisible.value = false;
+    };
+
+    const showQuestionModal = (item) => {
+      questionVisible.value = true;
+      currentQuestion.value = {
+        question: `What is the type of the collected "${item.value}" item?`,
+        answers: [
+          { text: 'int', correct: item.type === 'int' },
+          { text: 'string', correct: item.type === 'string' },
+          { text: 'boolean', correct: item.type === 'boolean' },
+          { text: 'char', correct: item.type === 'char' },
+          { text: 'float', correct: item.type === 'float' }
+        ],
+        item: item // Remember the item for setting collected state
+      };
+    };
+
+    const handleAnswer = (answer) => {
+      if (answer.correct) {
+        const collectible = collectibles.find(item => item.value === currentQuestion.value.item.value);
+        if (collectible) {
+          collectible.collected = true; 
+        }
+        questionVisible.value = false;
+        gameLoop.start();
+      }
     };
 
     onMounted(() => {
@@ -153,18 +161,17 @@ export default {
 
     return {
       introVisible,
-      modalVisible,
+      questionVisible,
       currentQuestion,
-      message,
-      handleAnswer,
       closeIntroModal,
-      startGame
+      showQuestionModal,
+      handleAnswer
     };
   }
 };
 </script>
 
-<style>
+<style scoped>
 .centered-container {
   display: flex;
   justify-content: center;
