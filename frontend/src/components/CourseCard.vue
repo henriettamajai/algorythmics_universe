@@ -1,6 +1,6 @@
 <template>
   <div class="border-2 border-purple-500 max-w-sm bg-white/10 shadow-lg rounded-lg overflow-hidden m-4 ">
-    <img :src="course.image" alt="Course Image" class="w-full h-32 object-cover" />
+    <img :src="`${course.imagePath}`" alt="Course Image" class="w-full h-32 object-cover" />
     <div class="p-4">
       <h3 class="text-xl font-semibold text-white uppercase tracking-widest">{{ course.title }}</h3>
       <div class="mt-2">
