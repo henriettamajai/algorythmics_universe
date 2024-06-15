@@ -4,16 +4,16 @@
     <div class="centered-container">
       <div ref="gameContainer" class="game-container">
         <canvas id="game-canvas" width="1280px" height="720" class="rounded-lg"></canvas>
+        <div class="collected-counter">
+          <p>Collected: {{ collectedCount }}</p>
+        </div>
       </div>
     </div>
 
-    <!-- IntroModal komponens -->
     <IntroModal 
       :visible="introVisible" 
       @close="closeIntroModal" 
     />
-
-    <!-- QuestionModal komponens -->
     <QuestionModal 
       v-if="questionVisible"
       :visible="questionVisible"
@@ -51,6 +51,8 @@ export default {
       new Collectible('char', 'A', new Vector2(850, 200), 'sprites/circle3.png'),
       new Collectible('float', 12.5, new Vector2(750, 650), 'sprites/rock.png')
     ];
+
+    const collectedCount = ref(0); 
 
     const startGame = () => {
       const canvas = document.getElementById("game-canvas");
@@ -119,6 +121,12 @@ export default {
 
         character.drawImage(ctx, characterPos.x, characterPos.y);
         collectibles.forEach(item => item.draw(ctx));
+
+      
+        ctx.fillStyle = 'white';
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText(`Collected: ${collectedCount.value}`, 20, canvas.height - 20);
       };
 
       gameLoop = new GameLoop(update, draw);
@@ -140,7 +148,7 @@ export default {
           { text: 'char', correct: item.type === 'char' },
           { text: 'float', correct: item.type === 'float' }
         ],
-        item: item // Remember the item for setting collected state
+        item: item 
       };
     };
 
@@ -149,6 +157,7 @@ export default {
         const collectible = collectibles.find(item => item.value === currentQuestion.value.item.value);
         if (collectible) {
           collectible.collected = true; 
+          collectedCount.value++;
         }
         questionVisible.value = false;
         gameLoop.start();
@@ -165,7 +174,8 @@ export default {
       currentQuestion,
       closeIntroModal,
       showQuestionModal,
-      handleAnswer
+      handleAnswer,
+      collectedCount
     };
   }
 };
@@ -177,5 +187,9 @@ export default {
   justify-content: center;
   align-items: center;
   padding-top: 24px;
+}
+
+.game-container {
+  position: relative;
 }
 </style>
