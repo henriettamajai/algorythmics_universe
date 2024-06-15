@@ -1,9 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const authRoute = require("./routes/auth");
+const authRoute = require("./routes/authRoute");
+const courseRoute = require("./routes/courseRoute");
 const app = express();
-const db = require("./controllers/dbController");
+const {initDatabase} = require("./controllers/dbController");
 
 app.use(
   cors({
@@ -12,8 +13,9 @@ app.use(
   })
 );
 app.use(bodyParser.json());
-db.initDatabase();
+initDatabase();
 app.use("/", authRoute);
+app.use("/", courseRoute);
 
 const port = 3000;
 app.listen(port, () => {

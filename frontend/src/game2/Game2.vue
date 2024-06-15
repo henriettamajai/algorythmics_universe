@@ -2,19 +2,18 @@
   <div>
     <Navigation />
     <div class="centered-container">
-      <div ref="gameContainer" class="game-container">
+      <div ref="gameContainer" class="game-container" style="position: relative;">
         <canvas id="game-canvas" width="1280px" height="720"></canvas>
+        <CollectedItems :collectedItems="collectedItems" style="position: absolute; bottom: 10px; right: 10px;" />
       </div>
     </div>
     <IntroModal 
       :visible="introVisible" 
       @close="closeIntroModal" 
     />
-    <CollectedItems :collectedItems="collectedItems" />
     <Modal 
-      :question="message"
       :visible="messageVisible"
-      @submit="closeMessageModal"
+      @close="closeMessageModal"
     />
   </div>
 </template>
@@ -40,7 +39,8 @@ export default {
     const collectibles = ref([]);
     const collectedItems = ref([]);
     const messageVisible = ref(false);
-    const message = ref('');
+
+    let messageTimer = null; 
 
     const startGame = () => {
       const canvas = document.getElementById("game-canvas");
@@ -72,8 +72,11 @@ export default {
         new Collectible('string', 'moon', new Vector2(750, 247), 'sprites/moon.png'),
         new Collectible('boolean', true, new Vector2(700, 500), 'sprites/circle2.png'),
         new Collectible('char', 'A', new Vector2(850, 200), 'sprites/circle3.png'),
-        new Collectible('float', 12.5, new Vector2(750, 650), 'sprites/rock.png')
-      ];
+        new Collectible('float', 12.5, new Vector2(750, 650), 'sprites/rock.png'),
+        new Collectible('float', 7.3, new Vector2(600, 400), 'sprites/rock.png'),
+         new Collectible('float', 9.8, new Vector2(450, 600), 'sprites/rock.png')
+];
+
 
       const update = () => {
         if (input.direction === DOWN) {
@@ -97,13 +100,13 @@ export default {
               characterPos.x + 64 > item.position.x &&
               characterPos.y < item.position.y + 32 &&
               characterPos.y + 64 > item.position.y) {
-            if (item.type !== 'number') {
-              showMessageModal(`Oops, you can't put this item in your backpack because it's not of type number.`);
+            if (item.type !== 'float') {
+              showMessageModal();
               return;
             }
             item.collected = true;
-            collectedItems.value.push(item); // Add collected item to list
-            gameLoop.stop();
+            collectedItems.value.push(item);
+            closeMessageModal();
           }
         });
       };
@@ -127,13 +130,18 @@ export default {
       gameLoop.start();
     };
 
-    const showMessageModal = (msg) => {
-      message.value = msg;
+    const showMessageModal = () => {
       messageVisible.value = true;
+
+      // Időzítő beállítása 5 másodpercre
+      messageTimer = setTimeout(() => {
+        closeMessageModal();
+      }, 5000);
     };
 
     const closeMessageModal = () => {
       messageVisible.value = false;
+      clearTimeout(messageTimer); // Időzítő törlése, hogy ne záródjon be újra
     };
 
     const closeIntroModal = () => {
@@ -148,7 +156,6 @@ export default {
       introVisible,
       closeIntroModal,
       collectedItems,
-      message,
       messageVisible,
       closeMessageModal
     };
