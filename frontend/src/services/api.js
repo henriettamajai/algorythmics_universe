@@ -9,13 +9,15 @@ const apiClient = axios.create({
 
 export default {
   async getAllCourses() {
-    console.log('getAllCourses')
     try {
       const response = await apiClient.get(`getAllCourses`);
       return response.data;
     } catch (e) {
       console.error('Error fetching courses:', e);
     }
+  },
+  async getUserCourses() {
+
   }
 }
 

@@ -2,6 +2,7 @@ export class Collectible {
   constructor(type, value, position, imageSrc) {
     this.type = type;
     this.value = value;
+
     this.position = position;
     this.collected = false;
     this.image = new Image();

@@ -5,7 +5,7 @@
       <Navigation />
     </div>
     <div class="ml-80 flex flex-wrap mt-8 gap-6">
-      <CourseCard v-for="course in filteredCourses" :key="course.id" :course="course" />
+      <CourseCard v-for="course in filteredCourses" :key="course._id" :course="course" />
     </div>
   </div>
 </template>
@@ -16,44 +16,29 @@ import Navigation from '@/components/Navigation.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import CourseCard from '@/components/CourseCard.vue'
 import { searchQuery } from '@/store/searchState'
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import api from '@/services/api';
 
-const courses = [
-  {
-    id: 1,
-    title: 'Game 1',
-    description: 'Learn the basics of HTML, CSS, and JavaScript.',
-    image: '/assets/default.png',
-    badges: ['HTML', 'CSS', 'JavaScript'],
-  },
-  {
-    id: 2,
-    title: 'Course 2',
-    description: 'Learn the basics of HTML, CSS, and JavaScript.',
-    image: '/assets/default.png',
-    badges: ['HTML', 'CSS', 'JavaScript'],
-  },
-  {
-  id: 3,
-  title: 'Course 3',
-  description: 'Learn the basics of HTML, CSS, and JavaScript.',
-  image: '/assets/default.png',
-  badges: ['HTML', 'CSS', 'JavaScript'],
-},
-{
-  id: 4,
-  title: 'Course 4',
-  description: 'Learn the basics of HTML, CSS, and JavaScript.',
-  image: '/assets/default.png',
-  badges: ['HTML', 'CSS', 'JavaScript'],
-},
-];
+
+const courses = ref([]);
+
+onMounted(async () => {
+
+  console.log('here')
+  try {
+    const response = await api.getAllCourses();
+    console.log('response ', response)
+    courses.value = response
+  } catch (error) {
+    console.error("Failed to fetch courses:", error);
+  }
+});
 
 const filteredCourses = computed(() => {
-  if (!searchQuery.value) {
-    return courses;
+  if (!searchQuery.value || courses.value.length == 0) {
+    return courses.value;
   }
-  return courses.filter(course =>
+  return courses.value.filter(course =>
     course.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
     course.description.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
