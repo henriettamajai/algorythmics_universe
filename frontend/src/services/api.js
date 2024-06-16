@@ -40,7 +40,20 @@ export default {
       console.error('Error starting course for user. ', e);
     }
 
-  }
-  
+  },
+  async changePassword(currentPassword, newPassword) {
+    const userId = localStorage.getItem('_id'); // A userId lekérése a localStorage-ból
+    try {
+      const response = await apiClient.post('/change-password', {
+        userId,
+        currentPassword,
+        newPassword
+      });
+      return response.data;
+    } catch (e) {
+      console.error('Error changing password:', e);
+      throw e;
+    }
+  },
 }
 
