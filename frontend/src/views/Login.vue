@@ -32,10 +32,10 @@ const loginUser = async () => {
 
     if (response.data && response.data.token) {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('username', response.data.account.username); 
+      localStorage.setItem('username', response.data.username); 
+      localStorage.setItem('_id', response.data._id)
       router.push({
-        name: 'dashboard',
-        params: { account: response.data.account }
+        name: 'dashboard'
       });
     } else {
       console.error('Login failed:', response.data.error);

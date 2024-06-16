@@ -52,6 +52,8 @@ export default {
     const currentQuestion = ref(null);
     let gameLoop = null;
     
+
+    
     const collectibles = [
       new Collectible('int', 42, new Vector2(455, 140), 'sprites/circle.png'),
       new Collectible('string', 'moon', new Vector2(750, 247), 'sprites/moon.png'),

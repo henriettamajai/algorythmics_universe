@@ -8,12 +8,11 @@ const courseStatus = Object.freeze({
 })
 
 const userCourseSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true },
-    courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'courses', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
     courseStatus: { type: String, enum: Object.values(courseStatus), default: courseStatus.NOT_STARTED }
 });
 userCourseSchema.static.courseStatus = courseStatus;
 
-module.exports = { courseStatus }
-const UserCourse =  mongoose.model('UserCourse', userCourseSchema)
-module.exports.UserCourse = UserCourse
+const UserCourse = mongoose.model('UserCourse', userCourseSchema)
+module.exports = { UserCourse, courseStatus }

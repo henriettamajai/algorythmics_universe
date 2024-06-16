@@ -67,6 +67,7 @@ const navigateTo = (item) => {
 const handleLogout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('username');
+  localStorage.removeItem('_id');
   window.location.href = '/';
 };
 </script>

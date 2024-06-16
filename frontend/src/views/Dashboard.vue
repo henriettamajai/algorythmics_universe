@@ -6,24 +6,20 @@
         <Navigation />
         <div class="flex-grow items-center">
           <button class="text-xl text-white bg-transparent px-3 py-2 m-6 font-medium hover:text-purple-700 hover:bg-gray-50 rounded-full"
-            @click="showCategory('In Progress')">
+            @click="showCategory(categoryNames.inProgress)">
             In progress
           </button>
           <button class="text-xl text-white bg-transparent px-3 py-2 m-6 font-medium hover:text-purple-700 hover:bg-gray-50 rounded-full"
-            @click="showCategory('Completed')">
+            @click="showCategory(categoryNames.completed)">
             Completed
           </button>
           <button class="text-xl text-white bg-transparent px-3 py-2 m-6 font-medium hover:text-purple-700 hover:bg-gray-50 rounded-full"
-            @click="showCategory('Upcoming')">
-            Upcoming
+            @click="showCategory(categoryNames.favorite)">
+            Favorite
           </button>
           <a class="text-xs m-6 text-white uppercase tracking-widest" href="/mycourses">view all</a>
-          <!-- Container for courses -->
           <div class="flex flex-row gap-6 m-6 mt-auto">
-            <div v-for="(course, index) in filteredCourses" :key="index"
-                 class="w-80 h-80 border border-white rounded-lg shadow-lg">
-              {{ course.name }}
-            </div>
+            <CourseCard v-for="data in filteredCourses" :key="data._id" :course="data.course" />
           </div>
         </div>
       </div>
@@ -32,46 +28,56 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted} from 'vue'
 import Navigation from '@/components/Navigation.vue'
 import Sidebar from '@/components/Sidebar.vue'
-import Cookies from 'js-cookie';
 import { searchQuery } from '@/store/searchState';
-
-const username = ref(Cookies.get('username') || '');
+import api from '@/services/api';
+import { userId, username } from '../store/localStorage'
+import CourseCard from '@/components/CourseCard.vue';
 
 const categoryNames = {
-  inProgress: 'In Progress',
-  completed: 'Completed',
-  upcoming: 'Upcoming'
+  inProgress: 'inProgress',
+  completed: 'completed',
+  favorite: 'favorite',
+  notStarted: 'notStarted'
 };
 
 const selectedCategory = ref(categoryNames.inProgress);
-
-const courses = [
-  { id: 1, name: 'Course 1', status: categoryNames.inProgress },
-  { id: 2, name: 'Course 2', status: categoryNames.completed },
-  { id: 3, name: 'Course 3', status: categoryNames.upcoming },
-  { id: 4, name: 'Course 4', status: categoryNames.upcoming },
-  { id: 5, name: 'Course 5', status: categoryNames.upcoming },
-  { id: 6, name: 'Course 6', status: categoryNames.completed }
-];
+const courses = ref([]);
 
 function showCategory(category) {
   selectedCategory.value = category;
 }
 
-const filteredCourses = computed(() => {
-  let filtered = courses.filter(course => course.status === selectedCategory.value);
+onMounted(async () => {
+  if (username) {
+    try {
+      const response = await api.getUserCourses(userId);
+      console.log(response)
+      courses.value = response
+    } catch (error) {
+      console.error("Failed to fetch courses:", error);
+    }
+  }
+});
 
+const filteredCourses = computed(() => {
+  let filtered = courses.value.filter(course => course.status === selectedCategory.value);
+
+  if (!searchQuery.value || courses.value.length == 0) {
+    return filtered;
+  }
+  
   if (searchQuery.value) {
-    filtered = filtered.filter(course => 
-      course.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    filtered = filtered.filter(data =>
+      data.course.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      data.course.description.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
   }
-
-  return filtered.slice(0, 3);
+  return filtered;
 });
+
 </script>
 
 <style>

@@ -16,8 +16,31 @@ export default {
       console.error('Error fetching courses:', e);
     }
   },
-  async getUserCourses() {
+  async getUserCourses(userId) {
+    console.log('getUserCourses')
+    try {
+      console.log('user to get courses for: ', userId)
+      const response = await apiClient.post('getUserCourses',
+        { userId },
+        { responseType: 'json' });
+      return response.data;
+    } catch (e) {
+      console.error('Error fetching user courses. ', e);
+    }
+  },
+  async startCourseForUser(courseId, userId) {
+
+    console.log('starting course for user')
+    try {
+      const response = await apiClient.post('startCourseForUser',
+        { userId, courseId },
+        { responseType: 'json' }
+      );
+    } catch (e) {
+      console.error('Error starting course for user. ', e);
+    }
 
   }
+  
 }
 

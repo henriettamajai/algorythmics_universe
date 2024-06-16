@@ -9,7 +9,7 @@
       <p class="text-white mt-2">{{ course.description }}</p>
       
       <a :href="`/game${course.number}`">
-        <button class="mt-4 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 uppercase tracking-widest">
+        <button @click="startCourse" class="mt-4 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 uppercase tracking-widest">
           Start now
         </button>
       </a>
@@ -18,11 +18,28 @@
 </template>
 
 <script>
+
+import { username, userId } from '../store/localStorage'
+import api from '@/services/api'
+
 export default {
+
   props: {
     course: {
-      type: Object,
+      type: {
+        _id: String,
+        number: Number,
+        title: String,
+        imagePath: String,
+        description: String,
+        tags: [String]
+      },
       required: true
+    }
+  },
+  methods: {
+    startCourse() {
+      api.startCourseForUser(this.course._id, userId);
     }
   }
 }

@@ -8,7 +8,7 @@
         class="px-4 py-2 bg-purple-800 border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 focus:bg-purple-700 active:bg-purple-700 focus:ring-offset-2 transition ease-in-out duration-150" 
         @click="closeModal"
       >
-        Start Next Level
+        Back to courses
       </button>
     </div>
   </div>

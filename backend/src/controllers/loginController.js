@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const loginControl = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     const user = await User.findOne({ email }).exec();
 
     if (!user) {
@@ -22,13 +22,11 @@ const loginControl = async (req, res) => {
       expiresIn: "1h",
     });
 
-
     res.status(200).json({
       token,
-      account: {
-        username: user.name,
-        email: user.email,
-      },
+      username: user.name,
+      email: user.email,
+      _id: user._id,
     });
   } catch (error) {
     console.error("Error logging in user", error);
