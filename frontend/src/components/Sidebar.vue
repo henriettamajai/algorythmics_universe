@@ -11,14 +11,13 @@
         <h1 class="text-center text-white uppercase tracking-widest pt-4">{{ username }}</h1>
         <ul role="list" class="pt-16">
           <li>
-            <ul role="list" class="-mx-2 space-y-1">
+            <ul role="list" class="-mx-2 space-y-4"> <!-- space-y-4 növeli az elemek közötti rést -->
               <li v-for="item in navigation" :key="item.name">
                 <a 
                   @click.prevent="navigateTo(item)" 
-                  :class="[item.current ? 'bg-purple-600/50 text-white uppercase tracking-widest' : 'text-white uppercase tracking-widest hover:text-purple-600 hover:bg-gray-50', 'group flex gap-x-3 rounded-md p-2 text-sm leading-6']"
-                  :style="{ backgroundColor: item.current ? 'rgba(128, 0, 128, 0.5)' : '' }"
+                  :class="[item.current ? 'bg-white text-purple-600' : 'text-white hover:text-purple-600 hover:bg-gray-50', 'uppercase tracking-widest group flex gap-x-3 rounded-md text-sm leading-6 p-2']"
                 >
-                  <component :is="item.icon" :class="[item.current ? 'text-white' : 'h-6 w-6']" />
+                  <component :is="item.icon" :class="[item.current ? 'h-6 w-6 text-purple-600' : 'h-6 w-6 text-white']" />
                   {{ item.name }}
                 </a>
               </li>
@@ -45,6 +44,7 @@ onMounted(() => {
   if (storedUsername) {
     username.value = storedUsername;
   }
+  updateCurrentNavigation();
 });
 
 const navigation = ref([
@@ -52,6 +52,13 @@ const navigation = ref([
   { name: 'My Profile', href: '/profile', icon: CogIcon, current: false },
   { name: 'Logout', href: '/logout', icon: ArrowLeftIcon, current: false },
 ]);
+
+const updateCurrentNavigation = () => {
+  const path = window.location.pathname;
+  navigation.value.forEach(navItem => {
+    navItem.current = navItem.href === path;
+  });
+};
 
 const navigateTo = (item) => {
   navigation.value.forEach(navItem => {
