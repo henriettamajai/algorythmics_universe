@@ -24,7 +24,9 @@
           <span class="text-center">Change Password</span>
         </button>
       </form>
-      <p v-if="message" class="mt-4 text-red-600 text-center">{{ message }}</p>
+      <p v-if="message" :class="{ 'text-green-600': isSuccess, 'text-red-600': !isSuccess }" class="mt-4 text-center">
+        {{ message }}
+      </p>
     </div>
   </div>
 </template>
@@ -38,22 +40,29 @@ const currentPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
 const message = ref('');
+const isSuccess = ref(false);
 
 const changePassword = async () => {
   if (newPassword.value !== confirmPassword.value) {
     message.value = 'Passwords do not match.';
     return;
   }
+
   try {
     const response = await api.changePassword(currentPassword.value, newPassword.value);
     message.value = 'Password changed successfully.';
+    isSuccess.value = true;
     currentPassword.value = '';
     newPassword.value = '';
     confirmPassword.value = '';
   } catch (error) {
     console.error('Error changing password', error.message);
-    message.value = error.message || 'Failed to change password.';
+    if (error.response && error.response.data && error.response.data.error) {
+      message.value = error.response.data.error;
+    } else {
+      message.value = 'Failed to change password.';
+    }
+    isSuccess.value = false;
   }
 };
 </script>
-
