@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const authRoute = require("./routes/authRoute");
 const courseRoute = require("./routes/courseRoute");
+const profileRoutes = require("./routes/profileRoutes");
 const app = express();
 const {initDatabase} = require("./controllers/dbController");
 
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 initDatabase();
 app.use("/", authRoute);
 app.use("/", courseRoute);
+app.use("/", profileRoutes);
 
 const port = 3000;
 app.listen(port, () => {
