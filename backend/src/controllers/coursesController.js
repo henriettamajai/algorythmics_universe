@@ -37,13 +37,13 @@ const startCourseForUser = async (req, res) => {
     try {
         const { userId, courseId } = req.body;
 
-        const exists = await UserCourse.findOne({
+        const userCourse = await UserCourse.findOne({
             userId: new mongoose.Types.ObjectId(userId),
             courseId: new mongoose.Types.ObjectId(courseId),
-            courseStatus: courseStatus.IN_PROGRESS
+            //courseStatus: courseStatus.IN_PROGRESS
         })
 
-        if (!exists) {
+        if (!userCourse) {
             const newUserCourse = new UserCourse({
                 userId: new mongoose.Types.ObjectId(userId),
                 courseId: new mongoose.Types.ObjectId(courseId),
@@ -53,6 +53,8 @@ const startCourseForUser = async (req, res) => {
             console.log('course started successfully')
             res.status(200).json({message:"Course started successfully"})
         } else {
+            userCourse.courseStatus = courseStatus.IN_PROGRESS;
+            userCourse.save();
             console.log('course already started')
             res.status(200).json({message: "Course already started."})
         }
@@ -79,15 +81,15 @@ const getCourseQuestions = async(req, res) => {
 
 const completeCourse = async (req, res) => {
     try {
-        const { userId, courseId } = req.body;
-
+        const { courseId, userId } = req.body;
+        console.log(courseId, userId)
         const userCourse = await UserCourse.findOne({
             userId: new mongoose.Types.ObjectId(userId),
             courseId: new mongoose.Types.ObjectId(courseId),
-            courseStatus: courseStatus.IN_PROGRESS
         })
+        console.log(userCourse)
 
-        if (userCourse) {
+        if (userCourse.courseStatus == courseStatus.IN_PROGRESS) {
             userCourse.courseStatus = courseStatus.COMPLETED;
             await userCourse.save();
             console.log('course completed successfully')
