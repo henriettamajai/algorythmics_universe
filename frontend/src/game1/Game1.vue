@@ -12,175 +12,143 @@
       </div>
     </div>
 
-    <IntroModal 
-      :visible="introVisible" 
-      @close="closeIntroModal" 
-    />
-    <QuestionModal 
-      v-if="questionVisible"
-      :visible="questionVisible"
-      :question="currentQuestion.question"
-      :answers="currentQuestion.answers"
-      @answer="handleAnswer"
-    />
-    <OutroModal 
-      :visible="congratulationsVisible" 
-      @close="closeCongratulationsModal" 
-    />
+    <IntroModal :visible="introVisible" @close="closeIntroModal" />
+    <QuestionModal v-if="questionVisible" :visible="questionVisible" :question="currentQuestion.question"
+      :answers="currentQuestion.answers" @answer="handleAnswer" />
+    <OutroModal :visible="congratulationsVisible" @close="closeCongratulationsModal" />
   </div>
 </template>
 
-<script>
+<script setup>
+
 import { ref, onMounted } from 'vue';
 import { Vector2 } from './Vector2';
 import { resources } from './Resource';
 import { Sprite } from './Sprite';
 import { GameLoop } from './GameLoop';
-import { Input, LEFT, RIGHT, UP, DOWN } from './Input.js';
 import Navigation from '@/components/Navigation.vue';
 import { Collectible } from './Collectible.js';
 import IntroModal from './IntroModal.vue';
 import QuestionModal from './QuestionModal.vue';
 import OutroModal from './OutroModal.vue';
+import api from '@/services/api';
 
-export default {
-  components: { Navigation, IntroModal, QuestionModal, OutroModal },
-  setup() {
-    const introVisible = ref(true);
-    const questionVisible = ref(false);
-    const congratulationsVisible = ref(false);
-    const currentQuestion = ref(null);
-    let gameLoop = null;
-    
+const introVisible = ref(true);
+const questionVisible = ref(false);
+const congratulationsVisible = ref(false);
+const currentQuestion = ref(null);
+const collectedCount = ref(0);
+var gameLoop = null;
+var collectibles = [];
 
-    
-    const collectibles = [
-      new Collectible('int', 42, new Vector2(455, 140), 'sprites/circle.png'),
-      new Collectible('string', 'moon', new Vector2(750, 247), 'sprites/moon.png'),
-      new Collectible('boolean', true, new Vector2(700, 500), 'sprites/circle2.png'),
-      new Collectible('char', 'A', new Vector2(850, 200), 'sprites/circle3.png'),
-      new Collectible('float', 12.5, new Vector2(750, 650), 'sprites/rock.png')
-    ];
 
-    const collectedCount = ref(0); 
 
-    const startGame = () => {
-      const canvas = document.getElementById("game-canvas");
-      const ctx = canvas.getContext("2d");
+const startGame = () => {
+  console.log('starting game')
+  const canvas = document.getElementById("game-canvas");
+  const ctx = canvas.getContext("2d");
 
-      const skySprite = new Sprite({
-        resource: resources.images.sky,
-        frameSize: new Vector2(1280, 720)
-      });
+  const skySprite = new Sprite({
+    resource: resources.images.sky,
+    frameSize: new Vector2(1280, 720)
+  });
 
-      const groundSprite = new Sprite({
-        resource: resources.images.ground,
-        frameSize: new Vector2(1280, 720)
-      });
+  const groundSprite = new Sprite({
+    resource: resources.images.ground,
+    frameSize: new Vector2(1280, 720)
+  });
 
-      const character = new Sprite({
-        resource: resources.images.character,
-        frameSize: new Vector2(64, 64),
-        hFrames: 4,
-        vFrames: 4,
-        frame: 1
-      });
+  const character = new Sprite({
+    resource: resources.images.character,
+    frameSize: new Vector2(64, 64),
+    hFrames: 4,
+    vFrames: 4,
+    frame: 1
+  });
 
-      const characterPos = new Vector2((canvas.width - 64) / 2, (canvas.width - 64) / 2);
-      const input = new Input();
+  const characterPos = new Vector2((canvas.width - 64) / 2, (canvas.width - 64) / 2);
 
-      const update = () => {
-        if (input.direction === DOWN) {
-          characterPos.y += 3;
-        }
-        if (input.direction === UP) {
-          characterPos.y -= 3;
-        }
-        if (input.direction === LEFT) {
-          characterPos.x -= 3;
-          character.frame = 14;
-        }
-        if (input.direction === RIGHT) {
-          characterPos.x += 3;
-          character.frame = 8;
-        }
+  gameLoop = new GameLoop(character, characterPos,skySprite, groundSprite, ctx, canvas, collectibles);
+  gameLoop.start();
+};
 
-        collectibles.forEach(item => {
-          if (!item.collected &&
-              characterPos.x < item.position.x + 16 &&
-              characterPos.x + 56 > item.position.x &&
-              characterPos.y < item.position.y + 16 &&
-              characterPos.y + 56 > item.position.y) {
-            item.collected = true;
-            showQuestionModal(item);
-            gameLoop.stop();
-          }
-        });
-      };
+const closeIntroModal = () => {
+  introVisible.value = false;
+};
 
-      const draw = () => {
-        skySprite.drawImage(ctx, 0, 0);
+const showQuestionModal = (item) => {
+  questionVisible.value = true;
+  currentQuestion.value = {
+    question: item.question,
+    answers: item.choices,
+    answerIndex: item.answerIndex,
+  };
+};
 
-        const groundWidth = 720;
-        const groundHeight = 720;
+const handleAnswer = (answer) => {
+  if (answer.correct) {
+    const collectible = collectibles.find(item => item.value === currentQuestion.value.item.value);
 
-        const x = (canvas.width - groundWidth) / 2;
-        const y = (canvas.height - groundHeight) / 2;
-
-        groundSprite.drawImage(ctx, x, y, groundWidth, groundHeight);
-
-        character.drawImage(ctx, characterPos.x, characterPos.y);
-        collectibles.forEach(item => item.draw(ctx));
-      };
-
-      gameLoop = new GameLoop(update, draw);
-      gameLoop.start();
-    };
-
-    const closeIntroModal = () => {
-      introVisible.value = false;
-    };
-
-    const showQuestionModal = (item) => {
-      questionVisible.value = true;
-      currentQuestion.value = {
-        question: `What is the type of the collected "${item.value}" item?`,
-        answers: [
-          { text: 'int', correct: item.type === 'int' },
-          { text: 'string', correct: item.type === 'string' },
-          { text: 'boolean', correct: item.type === 'boolean' },
-          { text: 'char', correct: item.type === 'char' },
-          { text: 'float', correct: item.type === 'float' }
-        ],
-        item: item 
-      };
-    };
-
-    const handleAnswer = (answer) => {
-      if (answer.correct) {
-        const collectible = collectibles.find(item => item.value === currentQuestion.value.item.value);
-        if (collectible) {
-          collectible.collected = true; 
-          collectedCount.value++;
-          if (collectedCount.value === 5) {
-            congratulationsVisible.value = true;
-          } else {
-            gameLoop.start();
-          }
-        }
-        questionVisible.value = false;
+    if (collectible) {
+      collectible.collected = true;
+      collectedCount.value++;
+      if (collectedCount.value === 5) {
+        congratulationsVisible.value = true;
+      } else {
+        gameLoop.start();
       }
-    };
+    }
+    questionVisible.value = false;
+  }
+};
 
-    const closeCongratulationsModal = () => {
-      congratulationsVisible.value = false;
-    };
+const closeCongratulationsModal = () => {
+  congratulationsVisible.value = false;
+};
 
-    onMounted(() => {
-      startGame();
-    });
+async function setup() {
 
-    return {
+  const currentUrl = window.location.href;
+  const urlObj = new URL(currentUrl);
+  const courseId = urlObj.searchParams.get('courseId');
+
+  console.log('asd ', courseId);
+  const questionList = await api.getCourseQuestions(courseId);
+  console.log('questionList', questionList)
+
+  // const collectibles = [
+  // new Collectible('int', 42, new Vector2(455, 140), 'sprites/circle.png'),
+  // new Collectible('string', 'moon', new Vector2(750, 247), 'sprites/moon.png'),
+  // new Collectible('boolean', true, new Vector2(700, 500), 'sprites/circle2.png'),
+  // new Collectible('char', 'A', new Vector2(850, 200), 'sprites/circle3.png'),
+  // new Collectible('float', 12.5, new Vector2(750, 650), 'sprites/rock.png')
+  // ];
+  console.log('here')
+  questionList.forEach(question => {
+    collectibles.push(new Collectible(question.question, question.choices, question.answerIndex, question.imagePath, question.positionX, question.positionY))
+    console.log('fdsghf', question);
+  })
+
+  startGame();
+
+}
+
+onMounted(() => {
+  console.log('mounted')
+  setup()
+});
+</script>
+
+<!-- 
+exports default {
+  // components: { Navigation, IntroModal, QuestionModal, OutroModal },
+
+    -->
+
+
+
+
+<!-- return {
       introVisible,
       questionVisible,
       congratulationsVisible,
@@ -189,8 +157,5 @@ export default {
       showQuestionModal,
       handleAnswer,
       closeCongratulationsModal,
-      collectedCount
-    };
-  }
-};
-</script>
+      collectedCount -->
+<!-- }; -->

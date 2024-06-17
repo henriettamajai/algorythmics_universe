@@ -55,5 +55,18 @@ export default {
       throw e;
     }
   },
+  async getCourseQuestions(courseId) {
+    console.log('getting questions for course with id: ', courseId);
+    try {
+      const response = await apiClient.post('getCourseQuestions',
+        { courseId },
+        { responseType: 'json' }
+      );
+      console.log('questions: ', response.data)
+      return response.data
+    } catch (e) {
+      console.error('Error fetching questions for course with id: ', courseId);
+    }
+  }
 }
 

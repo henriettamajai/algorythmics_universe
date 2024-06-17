@@ -8,7 +8,7 @@
               <input 
                 type="radio" 
                 :id="'answer-' + index" 
-                :value="answer.text" 
+                :value="'answer'" 
                 v-model="selectedAnswer"
                 class="mr-2"
               >
@@ -32,7 +32,8 @@
     props: {
       visible: Boolean,
       question: String,
-      answers: Array
+      answers: Array,
+      answerIndex: Number
     },
     data() {
       return {
@@ -42,14 +43,14 @@
     },
     methods: {
       evaluateAnswer() {
-        const answer = this.answers.find(ans => ans.text === this.selectedAnswer);
+        // const answer = this.answers.find(ans => ans.text === this.selectedAnswer);
   
-        if (answer && answer.correct) {
-          this.$emit('answer', answer); 
-          this.selectedAnswer = null;
-        } else {
-          this.message = 'Incorrect answer. Try again!';
-        }
+        // if (answer && answer.correct) {
+        //   this.$emit('answer', answer); 
+        //   this.selectedAnswer = null;
+        // } else {
+        //   this.message = 'Incorrect answer. Try again!';
+        // }
       }
     }
   };

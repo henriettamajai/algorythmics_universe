@@ -1,11 +1,14 @@
+import { Vector2 } from "./Vector2.js";
+
 export class Collectible {
-  constructor(type, value, position, imageSrc) {
-    this.type = type;
-    this.value = value;
-    this.position = position;
-    this.collected = false;
+  constructor(question, choices, answerIndex, imagePath, positionX, positionY) {
+    this.text = "?";
+    this.question = question;
+    this.choices = choices;
+    this.answerIndex = answerIndex;
+    this.position = new Vector2(positionX, positionY);
     this.image = new Image();
-    this.image.src = imageSrc;
+    this.image.src = imagePath;
   }
 
   draw(ctx) {
@@ -15,7 +18,7 @@ export class Collectible {
       ctx.textAlign = 'center';
       const centerX = this.position.x + 20; 
       const centerY = this.position.y + 22;
-      ctx.fillText(this.value, centerX, centerY);
+      ctx.fillText(this.text, centerX, centerY);
       
     }
   }

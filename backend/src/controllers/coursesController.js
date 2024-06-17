@@ -1,6 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const Course = require('../models/course')
 const { UserCourse, courseStatus } = require('../models/user_course')
+const Question = require('../models/question');
 
 const getAllCourses = async (req, res) => {
 
@@ -62,4 +63,19 @@ const startCourseForUser = async (req, res) => {
     }
 }
 
-module.exports = { getAllCourses, getUserCourses, startCourseForUser}
+const getCourseQuestions = async(req, res) => {
+    try {
+        const { courseId } = req.body;
+        console.log('getting questionsfor this course: ', courseId);
+
+        const questions = await Question.find({ courseId: courseId });
+        console.log('questions:', questions)
+        res.json(questions)
+    } catch (e) {
+        console.error("Error fetching user courses:", e);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+
+module.exports = { getAllCourses, getUserCourses, startCourseForUser, getCourseQuestions}

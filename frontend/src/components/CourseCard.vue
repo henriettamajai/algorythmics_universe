@@ -8,7 +8,7 @@
       </div>
       <p class="text-white mt-2">{{ course.description }}</p>
       
-      <a :href="`/game${course.number}`">
+      <a :href="`/game${course.number}?courseId=${course._id}`">
         <button @click="startCourse" class="mt-4 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 uppercase tracking-widest">
           Start now
         </button>
