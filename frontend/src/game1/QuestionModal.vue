@@ -7,8 +7,8 @@
             <div class="mb-2">
               <input 
                 type="radio" 
-                :id="'answer-' + index" 
-                :value="answer" 
+                :id="index" 
+                :value="index" 
                 v-model="selectedAnswer"
                 class="mr-2"
               >
@@ -18,8 +18,7 @@
         </div>
         <button 
           class="block w-full mt-6 px-4 py-2 bg-purple-800 border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 focus:bg-purple-700 active:bg-purple-700 focus:ring-offset-2 transition ease-in-out duration-150" 
-          @click="evaluateAnswer"
-        >
+          @click="evaluateAnswer">
           OK
         </button>
         <p v-if="message" class="mt-2 text-red-600">{{ message }}</p>
@@ -43,14 +42,17 @@
     },
     methods: {
       evaluateAnswer() {
-        // const answer = this.answers.find(ans => ans.text === this.selectedAnswer);
+        console.log('selectedAnswer', this.selectedAnswer)
+        console.log('answearIndex', this.answerIndex)
   
-        // if (answer && answer.correct) {
-        //   this.$emit('answer', answer); 
-        //   this.selectedAnswer = null;
-        // } else {
-        //   this.message = 'Incorrect answer. Try again!';
-        // }
+        if (this.selectedAnswer == this.answerIndex) {
+          this.$emit('answerEvent'); 
+          this.selectedAnswer = null;
+          this.message = ''; 
+
+        } else {
+          this.message = 'Incorrect answer. Try again!';
+        }
       }
     },
     mounted(){

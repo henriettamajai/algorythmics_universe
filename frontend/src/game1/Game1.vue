@@ -13,9 +13,15 @@
     </div>
 
     <IntroModal :visible="introVisible" @close="closeIntroModal" />
-    <QuestionModal v-if="questionVisible" :visible="questionVisible" :question="currentQuestion.question"
-      :choices="currentQuestion.choices" @answer="handleAnswer" />
-    <OutroModal :visible="congratulationsVisible" @close="closeCongratulationsModal" />
+    <QuestionModal 
+      v-if="questionVisible" 
+      :visible="questionVisible" 
+      :question="currentQuestion.question"
+      :choices="currentQuestion.choices" 
+      :answerIndex="currentQuestion.answerIndex"
+      @answerEvent="handleAnswer"
+     </QuestionModal>
+      <OutroModal :visible="congratulationsVisible" @close="closeCongratulationsModal" />
   </div>
 </template>
 
@@ -82,27 +88,28 @@ const showQuestionModal = (item) => {
   questionVisible.value = true;
 
   currentQuestion.value = {
+    visible: true,
     question: item.question,
     choices: item.choices,
     answerIndex: item.answerIndex,
   };
 };
 
-const handleAnswer = (answer) => {
-  if (answer.correct) {
-    const collectible = collectibles.find(item => item.value === currentQuestion.value.item.value);
+const handleAnswer = () => {
+  console.log('here')
+  const collectible = collectibles.find(item => item.question === currentQuestion.value.question);
 
-    if (collectible) {
-      collectible.collected = true;
-      collectedCount.value++;
-      if (collectedCount.value === 5) {
-        congratulationsVisible.value = true;
-      } else {
-        gameLoop.start();
-      }
+  console.log('collectible ', collectible)
+  if (collectible) {
+    collectible.collected = true;
+    collectedCount.value++;
+    if (collectedCount.value === 5) {
+      congratulationsVisible.value = true;
+    } else {
+      gameLoop.start();
     }
-    questionVisible.value = false;
   }
+  questionVisible.value = false;
 };
 
 const closeCongratulationsModal = () => {
