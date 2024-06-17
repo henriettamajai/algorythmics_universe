@@ -67,6 +67,17 @@ export default {
     } catch (e) {
       console.error('Error fetching questions for course with id: ', courseId);
     }
+  },
+  async completeCourse(courseId, userId) {
+    console.log('completing course')
+    try {
+      const response = await apiClient.post('completeCourse',
+        { userId, courseId },
+        { responseType: 'json' }
+      );
+    } catch (e) {
+      console.error('Error completing course. ', e);
+    }
   }
 }
 

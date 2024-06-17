@@ -77,5 +77,32 @@ const getCourseQuestions = async(req, res) => {
     }
 }
 
+const completeCourse = async (req, res) => {
+    try {
+        const { userId, courseId } = req.body;
 
-module.exports = { getAllCourses, getUserCourses, startCourseForUser, getCourseQuestions}
+        const userCourse = await UserCourse.findOne({
+            userId: new mongoose.Types.ObjectId(userId),
+            courseId: new mongoose.Types.ObjectId(courseId),
+            courseStatus: courseStatus.IN_PROGRESS
+        })
+
+        if (userCourse) {
+            userCourse.courseStatus = courseStatus.COMPLETED;
+            await userCourse.save();
+            console.log('course completed successfully')
+            res.status(200).json({message:"Course completed successfully"})
+        } else {
+            console.log('Course not started or already completed.')
+            res.status(200).json({message: "Course not started or already completed."})
+        }
+
+    } catch (e) {
+        console.error("Error completing course:", e);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+
+}
+
+
+module.exports = { getAllCourses, getUserCourses, startCourseForUser, getCourseQuestions, completeCourse}

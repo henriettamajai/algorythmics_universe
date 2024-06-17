@@ -103,7 +103,7 @@ const handleAnswer = () => {
   if (collectible) {
     collectible.collected = true;
     collectedCount.value++;
-    if (collectedCount.value === 5) {
+    if (collectedCount.value === 1) {
       congratulationsVisible.value = true;
     } else {
       gameLoop.start();
