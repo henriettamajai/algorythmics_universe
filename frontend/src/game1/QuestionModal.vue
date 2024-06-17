@@ -3,16 +3,16 @@
       <div class="bg-white p-8 rounded-lg max-w-md w-full">
         <p class="text-24 font-bold">{{ question }}</p>
         <div class="mt-4">
-          <template v-for="(answer, index) in answers" :key="index">
+          <template v-for="(answer, index) in choices" :key="index">
             <div class="mb-2">
               <input 
                 type="radio" 
                 :id="'answer-' + index" 
-                :value="'answer'" 
+                :value="answer" 
                 v-model="selectedAnswer"
                 class="mr-2"
               >
-              <label :for="'answer-' + index">{{ answer.text }}</label>
+              <label :for="'answer-' + index">{{ answer }}</label>
             </div>
           </template>
         </div>
@@ -32,7 +32,7 @@
     props: {
       visible: Boolean,
       question: String,
-      answers: Array,
+      choices: [String],
       answerIndex: Number
     },
     data() {
@@ -52,6 +52,9 @@
         //   this.message = 'Incorrect answer. Try again!';
         // }
       }
+    },
+    mounted(){
+      console.log('this.choices', this.choices)
     }
   };
   </script>

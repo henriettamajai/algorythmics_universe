@@ -1,7 +1,8 @@
 import { Input, LEFT, RIGHT, UP, DOWN } from "./Input.js";
+import { showQuestionModal } from "./Game1.vue";
 
 export class GameLoop {
-  constructor(character, characterPos, skySprite, groundSprite, ctx, canvas, collectibles) {
+  constructor(character, characterPos, skySprite, groundSprite, ctx, canvas, collectibles, showQuestionModal) {
     this.lastFrameTime = 0;
     this.accumulatedTime = 0;
     this.timeStep = 1000 / 60;
@@ -18,6 +19,8 @@ export class GameLoop {
     this.rafId = null;
     this.isRunning = false;
     this.input = new Input();
+
+    this.showQuestionModal = showQuestionModal;
   }
 
   mainLoop(timestamp) {
@@ -93,8 +96,8 @@ export class GameLoop {
         this.characterPos.y + 56 > item.position.y
       ) {
         item.collected = true;
-        showQuestionModal(item);
-        gameLoop.stop();
+        this.showQuestionModal(item);
+        stop();
       }
     });
   }

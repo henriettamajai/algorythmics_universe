@@ -14,7 +14,7 @@
 
     <IntroModal :visible="introVisible" @close="closeIntroModal" />
     <QuestionModal v-if="questionVisible" :visible="questionVisible" :question="currentQuestion.question"
-      :answers="currentQuestion.answers" @answer="handleAnswer" />
+      :choices="currentQuestion.choices" @answer="handleAnswer" />
     <OutroModal :visible="congratulationsVisible" @close="closeCongratulationsModal" />
   </div>
 </template>
@@ -68,7 +68,7 @@ const startGame = () => {
 
   const characterPos = new Vector2((canvas.width - 64) / 2, (canvas.width - 64) / 2);
 
-  gameLoop = new GameLoop(character, characterPos,skySprite, groundSprite, ctx, canvas, collectibles);
+  gameLoop = new GameLoop(character, characterPos, skySprite, groundSprite, ctx, canvas, collectibles, showQuestionModal);
   gameLoop.start();
 };
 
@@ -77,10 +77,13 @@ const closeIntroModal = () => {
 };
 
 const showQuestionModal = (item) => {
+  console.log('modal showing', item)
+
   questionVisible.value = true;
+
   currentQuestion.value = {
     question: item.question,
-    answers: item.choices,
+    choices: item.choices,
     answerIndex: item.answerIndex,
   };
 };
@@ -138,24 +141,3 @@ onMounted(() => {
   setup()
 });
 </script>
-
-<!-- 
-exports default {
-  // components: { Navigation, IntroModal, QuestionModal, OutroModal },
-
-    -->
-
-
-
-
-<!-- return {
-      introVisible,
-      questionVisible,
-      congratulationsVisible,
-      currentQuestion,
-      closeIntroModal,
-      showQuestionModal,
-      handleAnswer,
-      closeCongratulationsModal,
-      collectedCount -->
-<!-- }; -->
