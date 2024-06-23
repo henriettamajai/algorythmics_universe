@@ -1,173 +1,131 @@
 <template>
   <div>
     <Navigation />
-    <div class="centered-container">
-      <div ref="gameContainer" class="game-container" style="position: relative;">
-        <canvas id="game-canvas" width="1280px" height="720"></canvas>
-        <CollectedItems :collectedItems="collectedItems" style="position: absolute; bottom: 10px; right: 10px;" />
+    <div class="flex justify-center items-center pt-6">
+      <div class="relative">
+        <div class="game-relative">
+          <canvas id="game-canvas" width="1280" height="720" class="rounded-lg"></canvas>
+        </div>
+        <div class="absolute bottom-4 left-4 bg-black bg-opacity-50 p-2 rounded text-white text-lg">
+          <p>Collected items: {{ collectedCount }}</p>
+        </div>
       </div>
     </div>
-    <IntroModal 
-      :visible="introVisible" 
-      @close="closeIntroModal" 
-    />
-    <Modal 
-      :visible="messageVisible"
-      @close="closeMessageModal"
-    />
+
+    <IntroModal :visible="introVisible" @close="closeIntroModal" />
+    <QuestionModal 
+      v-if="questionVisible" 
+      :visible="questionVisible" 
+      :question="currentQuestion.question"
+      :choices="currentQuestion.choices" 
+      :answerIndex="currentQuestion.answerIndex"
+      @answerEvent="handleAnswer"
+     </QuestionModal>
+      <OutroModal :visible="congratulationsVisible" @close="closeCongratulationsModal" />
   </div>
 </template>
 
-<script>
+<script setup>
+
 import { ref, onMounted } from 'vue';
-import { Vector2 } from '../game1/Vector2';
+import { Vector2 } from '@/game1/Vector2';
 import { resources } from './Resource';
-import { Sprite } from '../game1/Sprite';
-import { GameLoop } from '../game1/GameLoop';
-import { Input, LEFT, RIGHT, UP, DOWN } from '../game1/Input.js';
+import { Sprite } from '@/game1/Sprite';
+import { GameLoop } from '@/game1/GameLoop';
 import Navigation from '@/components/Navigation.vue';
-import { Collectible } from '../game1/Collectible.js';
+import { Collectible } from './Collectible.js';
 import IntroModal from './IntroModal.vue';
-import CollectedItems from './CollectedItems.vue';
-import Modal from './Modal.vue';
+import QuestionModal from './QuestionModal.vue';
+import OutroModal from './OutroModal.vue';
+import api from '@/services/api';
 
-export default {
-  components: { Navigation, IntroModal, CollectedItems, Modal },
-  setup() {
-    const introVisible = ref(true);
-    let gameLoop = null;
-    const collectibles = ref([]);
-    const collectedItems = ref([]);
-    const messageVisible = ref(false);
-
-    let messageTimer = null; 
-
-    const startGame = () => {
-      const canvas = document.getElementById("game-canvas");
-      const ctx = canvas.getContext("2d");
-
-      const skySprite = new Sprite({
-        resource: resources.images.sky,
-        frameSize: new Vector2(1280, 720)
-      });
-
-      const groundSprite = new Sprite({
-        resource: resources.images.ground,
-        frameSize: new Vector2(1280, 720)
-      });
-
-      const character = new Sprite({
-        resource: resources.images.character,
-        frameSize: new Vector2(64, 64),
-        hFrames: 4,
-        vFrames: 4,
-        frame: 1
-      });
-
-      const characterPos = new Vector2((canvas.width - 64) / 2, (canvas.width - 64) / 2);
-      const input = new Input();
-
-      collectibles.value = [
-        new Collectible('number', 42, new Vector2(455, 140), 'sprites/circle.png'),
-        new Collectible('string', 'moon', new Vector2(750, 247), 'sprites/moon.png'),
-        new Collectible('boolean', true, new Vector2(700, 500), 'sprites/circle2.png'),
-        new Collectible('char', 'A', new Vector2(850, 200), 'sprites/circle3.png'),
-        new Collectible('float', 12.5, new Vector2(750, 650), 'sprites/rock.png'),
-        new Collectible('float', 7.3, new Vector2(600, 400), 'sprites/rock.png'),
-         new Collectible('float', 9.8, new Vector2(450, 600), 'sprites/rock.png')
-];
+const introVisible = ref(true);
+const questionVisible = ref(false);
+const congratulationsVisible = ref(false);
+const currentQuestion = ref(null);
+const collectedCount = ref(0);
+var gameLoop = null;
+var collectibles = [];
 
 
-      const update = () => {
-        if (input.direction === DOWN) {
-          characterPos.y += 1;
-        }
-        if (input.direction === UP) {
-          characterPos.y -= 1;
-        }
-        if (input.direction === LEFT) {
-          characterPos.x -= 1;
-          character.frame = 14;
-        }
-        if (input.direction === RIGHT) {
-          characterPos.x += 1;
-          character.frame = 8;
-        }
 
-        collectibles.value.forEach(item => {
-          if (!item.collected &&
-              characterPos.x < item.position.x + 32 &&
-              characterPos.x + 64 > item.position.x &&
-              characterPos.y < item.position.y + 32 &&
-              characterPos.y + 64 > item.position.y) {
-            if (item.type !== 'float') {
-              showMessageModal();
-              return;
-            }
-            item.collected = true;
-            collectedItems.value.push(item);
-            closeMessageModal();
-          }
-        });
-      };
+const startGame = () => {
+  const canvas = document.getElementById("game-canvas");
+  const ctx = canvas.getContext("2d");
 
-      const draw = () => {
-        skySprite.drawImage(ctx, 0, 0);
+  const skySprite = new Sprite({
+    resource: resources.images.sky,
+    frameSize: new Vector2(1280, 720)
+  });
 
-        const groundWidth = 720;
-        const groundHeight = 720;
+  const groundSprite = new Sprite({
+    resource: resources.images.ground,
+    frameSize: new Vector2(1280, 720)
+  });
 
-        const x = (canvas.width - groundWidth) / 2;
-        const y = (canvas.height - groundHeight) / 2;
+  const character = new Sprite({
+    resource: resources.images.character,
+    frameSize: new Vector2(64, 64),
+    hFrames: 4,
+    vFrames: 4,
+    frame: 1
+  });
 
-        groundSprite.drawImage(ctx, x, y, groundWidth, groundHeight);
+  const characterPos = new Vector2((canvas.width - 64) / 2, (canvas.width - 64) / 2);
 
-        character.drawImage(ctx, characterPos.x, characterPos.y);
-        collectibles.value.forEach(item => item.draw(ctx));
-      };
-
-      gameLoop = new GameLoop(update, draw); 
-      gameLoop.start();
-    };
-
-    const showMessageModal = () => {
-      messageVisible.value = true;
-
-      // Időzítő beállítása 5 másodpercre
-      messageTimer = setTimeout(() => {
-        closeMessageModal();
-      }, 5000);
-    };
-
-    const closeMessageModal = () => {
-      messageVisible.value = false;
-      clearTimeout(messageTimer); // Időzítő törlése, hogy ne záródjon be újra
-    };
-
-    const closeIntroModal = () => {
-      introVisible.value = false;
-    };
-
-    onMounted(() => {
-      startGame();
-    });
-
-    return {
-      introVisible,
-      closeIntroModal,
-      collectedItems,
-      messageVisible,
-      closeMessageModal
-    };
-  }
+  gameLoop = new GameLoop(character, characterPos, skySprite, groundSprite, ctx, canvas, collectibles, showQuestionModal);
+  gameLoop.start();
 };
-</script>
 
-<style>
-.centered-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 24px;
+const closeIntroModal = () => {
+  introVisible.value = false;
+};
+
+const showQuestionModal = (item) => {
+  questionVisible.value = true;
+
+  currentQuestion.value = {
+    visible: true,
+    question: item.question,
+    choices: item.choices,
+    answerIndex: item.answerIndex,
+  };
+};
+
+const handleAnswer = () => {
+  const collectible = collectibles.find(item => item.question === currentQuestion.value.question);
+  if (collectible) {
+    collectible.collected = true;
+    collectedCount.value++;
+    if (collectedCount.value === 4) {
+      congratulationsVisible.value = true;
+    } else {
+      gameLoop.start();
+    }
+  }
+  questionVisible.value = false;
+};
+
+const closeCongratulationsModal = () => {
+  congratulationsVisible.value = false;
+};
+
+async function setup() {
+
+  const currentUrl = window.location.href;
+  const urlObj = new URL(currentUrl);
+  const courseId = urlObj.searchParams.get('courseId');
+  const questionList = await api.getCourseQuestions(courseId);
+ 
+  questionList.forEach(question => {
+    collectibles.push(new Collectible(question.question, question.choices, question.answerIndex, question.imagePath, question.positionX, question.positionY))
+  })
+
+  startGame();
 }
-</style>
+
+onMounted(() => {
+ 
+  setup()
+});
+</script>
