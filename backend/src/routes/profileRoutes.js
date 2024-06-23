@@ -7,6 +7,4 @@ router.post('/api/addUserScore', addUserScore);
 router.post('/api/getUserScore', getUserScore);
 router.get('/api/listAllScores', listAllScores);
 
-
-
 module.exports = router;
