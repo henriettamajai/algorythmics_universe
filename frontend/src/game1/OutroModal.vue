@@ -34,6 +34,7 @@ export default {
 
 
         await api.completeCourse(courseId, userId);
+        await api.addUserScore(userId, 100);
         this.$emit('close');
       } catch (error) {
         console.error("Failed to complete course:", error);

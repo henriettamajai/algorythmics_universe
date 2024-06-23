@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
   }, 
   profilePicture: {
     type: String
+  },
+  score: {
+    type: Number,
+    default: 0
   }
 });
 

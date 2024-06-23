@@ -7,12 +7,14 @@ import Login from '@/views/Login.vue'
 import Game1 from '@/game1/Game1.vue'
 import Game2 from '@/game2/Game2.vue'
 import Profile from '@/views/Profile.vue'
+import Leaderboard from '@/views/Leaderboard.vue'
 
 const routes = [
     { path: '/', component: Home },
     { path: '/register', component: Register},
     { path: '/dashboard', component: Dashboard},
     { path: '/courses', component: Courses},
+    { path: '/leaderboard', component: Leaderboard},
     { path: '/login', component: Login},
     { path: '/dashboard', name: 'dashboard', component: Dashboard },
     { path: '/profile', component: Profile},

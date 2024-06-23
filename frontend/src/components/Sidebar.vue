@@ -8,10 +8,14 @@
         <div class="flex justify-center">
           <img class="h-48 rounded-full w-auto flex mt-12" src="@/assets/avatar.jpg" alt="Avatar" />
         </div>
+
+        <div>
+          <h1 class="text-center text-white uppercase tracking-widest pt-4">{{ score }} POINTS</h1>
+        </div>
         <h1 class="text-center text-white uppercase tracking-widest pt-4">{{ username }}</h1>
         <ul role="list" class="pt-16">
           <li>
-            <ul role="list" class="-mx-2 space-y-4"> <!-- space-y-4 növeli az elemek közötti rést -->
+            <ul role="list" class="-mx-2 space-y-4">
               <li v-for="item in navigation" :key="item.name">
                 <a 
                   @click.prevent="navigateTo(item)" 
@@ -37,12 +41,20 @@ import {
   CogIcon,
   ArrowLeftIcon,
 } from '@heroicons/vue/outline';
+import api from '@/services/api';
+import { userId } from '@/store/localStorage';
 
 const username = ref(localStorage.getItem('username'));
-onMounted(() => {
+const score = ref();
+onMounted(async () => {
   const storedUsername = sessionStorage.getItem('username');
+  const scoreFromDb = await api.getUserScore(userId)
+console.log('scorefromdb: ', scoreFromDb)
   if (storedUsername) {
     username.value = storedUsername;
+  }
+  if (scoreFromDb) {
+    score.value = scoreFromDb.score;
   }
   updateCurrentNavigation();
 });
@@ -50,6 +62,7 @@ onMounted(() => {
 const navigation = ref([
   { name: 'My Courses', href: '/mycourses', icon: AcademicCapIcon, current: false },
   { name: 'My Profile', href: '/profile', icon: CogIcon, current: false },
+  { name: 'Leaderboard', href: '/leaderboard', icon: AcademicCapIcon, current: false},
   { name: 'Logout', href: '/logout', icon: ArrowLeftIcon, current: false },
 ]);
 

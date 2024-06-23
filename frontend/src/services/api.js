@@ -78,6 +78,39 @@ export default {
     } catch (e) {
       console.error('Error completing course. ', e);
     }
-  }
+  },
+  async getUserScore(userId) {
+    console.log('getting user score')
+    try {
+      const response = await apiClient.post('getUserScore',
+        { userId },
+        { responseType: 'json' }
+      );
+      return response.data;
+    } catch (e) {
+      console.error('Error getting user score. ', e);
+    }
+  },
+  async addUserScore(userId, score) {
+    console.log('setting user score', userId, score)
+    try {
+      const response = await apiClient.post('addUserScore',
+        { userId, score },
+        { responseType: 'json' }
+      );
+      return response.data;
+    } catch (e) {
+      console.error('Error getting user score. ', e);
+    }
+  }, 
+  async listAllScores() {
+    console.log('listing all scores');
+    try {
+      const response = await apiClient.get('listAllScores');
+      return response.data;
+    } catch (e) {
+      console.error('Error listing all scores.', e);
+    }
+  },
 }
 
