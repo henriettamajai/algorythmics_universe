@@ -17,9 +17,7 @@ export default {
     }
   },
   async getUserCourses(userId) {
-    console.log('getUserCourses')
     try {
-      console.log('user to get courses for: ', userId)
       const response = await apiClient.post('getUserCourses',
         { userId },
         { responseType: 'json' });
@@ -56,20 +54,17 @@ export default {
     }
   },
   async getCourseQuestions(courseId) {
-    console.log('getting questions for course with id: ', courseId);
     try {
       const response = await apiClient.post('getCourseQuestions',
         { courseId },
         { responseType: 'json' }
       );
-      console.log('questions: ', response.data)
       return response.data
     } catch (e) {
       console.error('Error fetching questions for course with id: ', courseId);
     }
   },
   async completeCourse(courseId, userId) {
-    console.log('completing course')
     try {
       const response = await apiClient.post('completeCourse',
         { userId, courseId },
@@ -80,7 +75,6 @@ export default {
     }
   },
   async getUserScore(userId) {
-    console.log('getting user score')
     try {
       const response = await apiClient.post('getUserScore',
         { userId },
@@ -88,11 +82,9 @@ export default {
       );
       return response.data;
     } catch (e) {
-      console.error('Error getting user score. ', e);
     }
   },
   async addUserScore(userId, score) {
-    console.log('setting user score', userId, score)
     try {
       const response = await apiClient.post('addUserScore',
         { userId, score },

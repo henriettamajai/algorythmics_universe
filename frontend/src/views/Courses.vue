@@ -23,8 +23,6 @@ import api from '@/services/api';
 const courses = ref([]);
 
 onMounted(async () => {
-
-  console.log('here')
   try {
     const response = await api.getAllCourses();
     console.log('response ', response)

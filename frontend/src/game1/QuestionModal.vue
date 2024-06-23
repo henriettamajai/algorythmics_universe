@@ -41,10 +41,7 @@
       };
     },
     methods: {
-      evaluateAnswer() {
-        console.log('selectedAnswer', this.selectedAnswer)
-        console.log('answearIndex', this.answerIndex)
-  
+      evaluateAnswer() {  
         if (this.selectedAnswer == this.answerIndex) {
           this.$emit('answerEvent'); 
           this.selectedAnswer = null;
@@ -55,9 +52,6 @@
         }
       }
     },
-    mounted(){
-      console.log('this.choices', this.choices)
-    }
   };
   </script>
   

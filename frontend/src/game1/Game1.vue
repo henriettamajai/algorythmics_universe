@@ -50,7 +50,6 @@ var collectibles = [];
 
 
 const startGame = () => {
-  console.log('starting game')
   const canvas = document.getElementById("game-canvas");
   const ctx = canvas.getContext("2d");
 
@@ -83,8 +82,6 @@ const closeIntroModal = () => {
 };
 
 const showQuestionModal = (item) => {
-  console.log('modal showing', item)
-
   questionVisible.value = true;
 
   currentQuestion.value = {
@@ -96,14 +93,11 @@ const showQuestionModal = (item) => {
 };
 
 const handleAnswer = () => {
-  console.log('here')
   const collectible = collectibles.find(item => item.question === currentQuestion.value.question);
-
-  console.log('collectible ', collectible)
   if (collectible) {
     collectible.collected = true;
     collectedCount.value++;
-    if (collectedCount.value === 1) {
+    if (collectedCount.value === 4) {
       congratulationsVisible.value = true;
     } else {
       gameLoop.start();
@@ -121,30 +115,17 @@ async function setup() {
   const currentUrl = window.location.href;
   const urlObj = new URL(currentUrl);
   const courseId = urlObj.searchParams.get('courseId');
-
-  console.log('asd ', courseId);
   const questionList = await api.getCourseQuestions(courseId);
-  console.log('questionList', questionList)
-
-  // const collectibles = [
-  // new Collectible('int', 42, new Vector2(455, 140), 'sprites/circle.png'),
-  // new Collectible('string', 'moon', new Vector2(750, 247), 'sprites/moon.png'),
-  // new Collectible('boolean', true, new Vector2(700, 500), 'sprites/circle2.png'),
-  // new Collectible('char', 'A', new Vector2(850, 200), 'sprites/circle3.png'),
-  // new Collectible('float', 12.5, new Vector2(750, 650), 'sprites/rock.png')
-  // ];
-  console.log('here')
+ 
   questionList.forEach(question => {
     collectibles.push(new Collectible(question.question, question.choices, question.answerIndex, question.imagePath, question.positionX, question.positionY))
-    console.log('fdsghf', question);
   })
 
   startGame();
-
 }
 
 onMounted(() => {
-  console.log('mounted')
+ 
   setup()
 });
 </script>

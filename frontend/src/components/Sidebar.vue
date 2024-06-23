@@ -49,7 +49,6 @@ const score = ref();
 onMounted(async () => {
   const storedUsername = sessionStorage.getItem('username');
   const scoreFromDb = await api.getUserScore(userId)
-console.log('scorefromdb: ', scoreFromDb)
   if (storedUsername) {
     username.value = storedUsername;
   }
