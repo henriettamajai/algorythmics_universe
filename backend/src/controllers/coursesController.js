@@ -106,5 +106,43 @@ const completeCourse = async (req, res) => {
 
 }
 
+const markCourseAsFavorite = async (req, res) => {
+    try {
+        const { userId, courseId } = req.body;
 
-module.exports = { getAllCourses, getUserCourses, startCourseForUser, getCourseQuestions, completeCourse}
+        const userCourse = await UserCourse.markAsFavorite(userId, courseId);
+
+        if (!userCourse) {
+            res.status(404).json({ error: "UserCourse not found" });
+            return;
+        }
+
+        res.status(200).json({ message: "Course marked as favorite", isFavorite: true });
+    } catch (error) {
+        console.error("Error marking course as favorite:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+const removeCourseFromFavorites = async (req, res) => {
+    try {
+        const { userId, courseId } = req.body;
+
+        const userCourse = await UserCourse.removeFavorite(userId, courseId);
+
+        if (!userCourse) {
+            res.status(404).json({ error: "UserCourse not found" });
+            return;
+        }
+
+        res.status(200).json({ message: "Course removed from favorites", isFavorite: false });
+    } catch (error) {
+        console.error("Error removing course from favorites:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+module.exports = { getAllCourses, getUserCourses, startCourseForUser, getCourseQuestions, completeCourse
+    , markCourseAsFavorite, removeCourseFromFavorites
+}

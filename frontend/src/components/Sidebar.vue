@@ -60,7 +60,7 @@ console.log('scorefromdb: ', scoreFromDb)
 });
 
 const navigation = ref([
-  { name: 'My Courses', href: '/mycourses', icon: AcademicCapIcon, current: false },
+  { name: 'My Courses', href: '/dashboard', icon: AcademicCapIcon, current: false },
   { name: 'My Profile', href: '/profile', icon: CogIcon, current: false },
   { name: 'Leaderboard', href: '/leaderboard', icon: AcademicCapIcon, current: false},
   { name: 'Logout', href: '/logout', icon: ArrowLeftIcon, current: false },

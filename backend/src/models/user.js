@@ -14,9 +14,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   }, 
-  profilePicture: {
-    type: String
-  },
   score: {
     type: Number,
     default: 0
