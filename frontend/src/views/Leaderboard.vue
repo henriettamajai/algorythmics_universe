@@ -52,11 +52,12 @@
     async created() {
       try {
         const response = await apiClient.listAllScores();
-        this.scores = response.scores;
+        this.scores = response.scores.sort((a, b) => b.score - a.score);
       } catch (e) {
         console.error('Error fetching scores:', e);
       }
     }
   };
-  </script>
+</script>
+
   
