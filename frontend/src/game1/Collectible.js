@@ -13,11 +13,12 @@ export class Collectible {
 
   draw(ctx) {
     if (!this.collected) {
-      ctx.drawImage(this.image, this.position.x, this.position.y, 40, 40);
+      ctx.drawImage(this.image, this.position.x, this.position.y, 50, 50);
       ctx.fillStyle = 'white';
       ctx.textAlign = 'center';
-      const centerX = this.position.x + 20; 
-      const centerY = this.position.y + 22;
+      ctx.font = '16px Arial';
+      const centerX = this.position.x + 25; 
+      const centerY = this.position.y + 30;
       ctx.fillText(this.text, centerX, centerY);
       
     }

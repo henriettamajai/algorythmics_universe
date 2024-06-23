@@ -38,4 +38,7 @@ const router = createRouter({
   
     next();
   });
+  router.afterEach(() => {
+    document.title = 'AlgoRythmics Universe';
+});
 export default router;

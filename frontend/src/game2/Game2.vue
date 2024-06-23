@@ -33,7 +33,7 @@ import { resources } from './Resource';
 import { Sprite } from '@/game1/Sprite';
 import { GameLoop } from '@/game1/GameLoop';
 import Navigation from '@/components/Navigation.vue';
-import { Collectible } from './Collectible.js';
+import { Collectible } from '@/game1/Collectible.js';
 import IntroModal from './IntroModal.vue';
 import QuestionModal from './QuestionModal.vue';
 import OutroModal from './OutroModal.vue';
