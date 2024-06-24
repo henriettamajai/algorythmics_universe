@@ -77,34 +77,64 @@ const getCourseQuestions = async(req, res) => {
         console.error("Error fetching user courses:", e);
         res.status(500).json({ error: "Internal Server Error" });
     }
-}
-
+}; 
 const completeCourse = async (req, res) => {
     try {
         const { courseId, userId } = req.body;
-        console.log(courseId, userId)
+        console.log(courseId, userId);
+
+        
         const userCourse = await UserCourse.findOne({
             userId: new mongoose.Types.ObjectId(userId),
             courseId: new mongoose.Types.ObjectId(courseId),
-        })
-        console.log(userCourse)
+        });
 
-        if (userCourse.courseStatus == courseStatus.IN_PROGRESS) {
-            userCourse.courseStatus = courseStatus.COMPLETED;
-            await userCourse.save();
-            console.log('course completed successfully')
-            res.status(200).json({message:"Course completed successfully"})
-        } else {
-            console.log('Course not started or already completed.')
-            res.status(200).json({message: "Course not started or already completed."})
+        if (!userCourse) {
+            return res.status(404).json({ message: "User course not found." });
         }
 
-    } catch (e) {
-        console.error("Error completing course:", e);
+        if (userCourse.courseStatus === courseStatus.IN_PROGRESS) {
+            userCourse.courseStatus = courseStatus.COMPLETED;
+
+            await userCourse.save();
+            console.log('Course completed successfully');
+            const course = await Course.findByIdAndUpdate(courseId, { isAccessible: true }, { new: true });
+            if (!course) {
+                return res.status(404).json({ message: "Course not found." });
+            }
+
+            const nextCourseNumber = course.number + 1;
+            let nextUserCourse = await UserCourse.findOneAndUpdate(
+                {
+                    userId: new mongoose.Types.ObjectId(userId),
+                    number: nextCourseNumber
+                },
+                {
+                    $setOnInsert: {
+                        courseId: new mongoose.Types.ObjectId(), 
+                        courseStatus: courseStatus.NOT_STARTED,
+                        isAccessible: true
+                    }
+                },
+                { new: true, upsert: true, setDefaultsOnInsert: true }
+            );
+
+            if (!nextUserCourse) {
+                console.log('Next course added successfully');
+            } else {
+                console.log('Next course updated successfully');
+            }
+
+            res.status(200).json({ message: "Course completed successfully", isAccessible: true });
+        } else {
+            console.log('Course not started or already completed.');
+            res.status(200).json({ message: "Course not started or already completed.", isAccessible: true });
+        }
+    } catch (error) {
+        console.error("Error completing course:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
-
-}
+};
 
 const markCourseAsFavorite = async (req, res) => {
     try {

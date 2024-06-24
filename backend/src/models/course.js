@@ -20,6 +20,10 @@ const courseSchema = new mongoose.Schema({
     tags: {
         type: [String],
         default: []
+    },
+    isAccessible: {
+        type: Boolean,
+        default: false
     }
 });
 

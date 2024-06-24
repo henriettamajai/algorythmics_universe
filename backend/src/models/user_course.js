@@ -1,18 +1,22 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const courseStatus = Object.freeze({
     IN_PROGRESS: "inProgress",
     COMPLETED: "completed",
     FAVORITE: "favorite",
     NOT_STARTED: "notStarted",
-})
+});
 
 const userCourseSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
-    courseStatus: { type: String, enum: Object.values(courseStatus), default: courseStatus.NOT_STARTED }
+    courseStatus: { type: String, enum: Object.values(courseStatus), default: courseStatus.NOT_STARTED },
+    isAccessible: { type: Boolean, default: true },
+    number: { type: Number, default: 1 } 
 });
-userCourseSchema.static.courseStatus = courseStatus;
 
-const UserCourse = mongoose.model('UserCourse', userCourseSchema)
-module.exports = { UserCourse, courseStatus }
+userCourseSchema.statics.courseStatus = courseStatus;
+
+const UserCourse = mongoose.model('UserCourse', userCourseSchema);
+
+module.exports = { UserCourse, courseStatus };

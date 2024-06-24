@@ -40,7 +40,7 @@ export default {
 
   },
   async changePassword(currentPassword, newPassword) {
-    const userId = localStorage.getItem('_id'); // A userId lekérése a localStorage-ból
+    const userId = localStorage.getItem('_id');
     try {
       const response = await apiClient.post('/change-password', {
         userId,
@@ -66,14 +66,20 @@ export default {
   },
   async completeCourse(courseId, userId) {
     try {
-      const response = await apiClient.post('completeCourse',
-        { userId, courseId },
-        { responseType: 'json' }
-      );
+      const response = await apiClient.post('completeCourse', { userId, courseId });
+      const { message, isAccessible } = response.data;
+  
+      // Itt kezeld az isAccessible értékét, például frissítsd a felhasználói felületet vagy a szükséges logikát
+      console.log(message);
+      console.log('isAccessible:', isAccessible);
+  
+      return { message, isAccessible };
     } catch (e) {
-      console.error('Error completing course. ', e);
+      console.error('Error completing course:', e);
+      throw e;
     }
   },
+  
   async getUserScore(userId) {
     try {
       const response = await apiClient.post('getUserScore',
