@@ -4,7 +4,7 @@
     <div class="ml-72 px-2 py-1">
       <Navigation />
     </div>
-    <div class="ml-80 flex flex-wrap mt-8 gap-6">
+    <div class="ml-80 flex flex-wrap mt-8 gap-6 items-center justify-center">
       <CourseCard v-for="course in filteredCourses" :key="course._id" :course="course" />
     </div>
   </div>
