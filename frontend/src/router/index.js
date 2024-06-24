@@ -9,6 +9,7 @@ import Game2 from '@/game2/Game2.vue'
 import Game3 from '@/game3/Game3.vue'
 import Game4 from '@/game4/Game4.vue'
 import Game5 from '@/game5/Game5.vue'
+import Game6 from '@/game6/Game6.vue'
 import Profile from '@/views/Profile.vue'
 import Leaderboard from '@/views/Leaderboard.vue'
 
@@ -25,7 +26,8 @@ const routes = [
     { path: '/game2', component: Game2},
     { path: '/game3', component: Game3},
     { path: '/game4', component: Game4},
-    { path: '/game5', component: Game5}
+    { path: '/game5', component: Game5},
+    { path: '/game6', component: Game6}
   ];
 
 const router = createRouter({
