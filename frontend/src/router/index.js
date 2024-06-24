@@ -6,6 +6,8 @@ import Courses from '@/views/Courses.vue'
 import Login from '@/views/Login.vue'
 import Game1 from '@/game1/Game1.vue'
 import Game2 from '@/game2/Game2.vue'
+import Game3 from '@/game3/Game3.vue'
+import Game4 from '@/game4/Game4.vue'
 import Profile from '@/views/Profile.vue'
 import Leaderboard from '@/views/Leaderboard.vue'
 
@@ -19,7 +21,9 @@ const routes = [
     { path: '/dashboard', name: 'dashboard', component: Dashboard },
     { path: '/profile', component: Profile},
     { path: '/game1', component: Game1},
-    { path: '/game2', component: Game2}
+    { path: '/game2', component: Game2},
+    { path: '/game3', component: Game3},
+    { path: '/game4', component: Game4}
   ];
 
 const router = createRouter({
